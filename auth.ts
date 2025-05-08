@@ -64,13 +64,13 @@ export const config = {
           body: JSON.stringify(payload)
         });
 
-        const user = await res.json();
+        const jsonResult = await res.json();
 
         if (!res.ok) {
-          throw new Error(user.message);
+          return null;
         }
 
-        if (res.ok && user) {
+        if (res.ok && jsonResult) {
           const prefix = process.env.NODE_ENV === 'development' ? '__Dev-' : '';
 
           // we set http only cookie here to store refresh token information as we will not append it to our session to avoid maximum size warning
@@ -78,13 +78,13 @@ export const config = {
           const cookieStore = await cookies();
           cookieStore.set({
             name: `${prefix}xxx.refresh-token`,
-            value: user.refreshToken,
+            value: jsonResult.refreshToken,
             httpOnly: true,
             sameSite: 'strict',
             secure: true
           } as any);
 
-          return user;
+          return jsonResult;
         }
 
         return null;

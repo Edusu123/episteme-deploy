@@ -3,6 +3,7 @@ import './globals.css';
 
 import { Analytics } from '@vercel/analytics/react';
 import { NextThemeProvider } from '@/components/providers/ThemeProvider';
+import { ToastProvider } from '@/components/providers/ToastProvider';
 
 export const metadata = {
   title: 'episteme'
@@ -26,7 +27,9 @@ export default async function RootLayout({
       </head>
       <body className="flex min-h-screen w-full flex-col">
         <NextAuthProvider>
-          <NextThemeProvider>{children}</NextThemeProvider>
+          <NextThemeProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </NextThemeProvider>
         </NextAuthProvider>
       </body>
       <Analytics />

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
 
 interface IProps {
@@ -16,10 +16,5 @@ export default function DashboardLayout({ children }: IProps) {
       toast.success('Novo ambiente criado com sucesso!');
   }, []);
 
-  return (
-    <div>
-      <Toaster richColors position="top-center" />
-      {children}
-    </div>
-  );
+  return <div>{children}</div>;
 }
