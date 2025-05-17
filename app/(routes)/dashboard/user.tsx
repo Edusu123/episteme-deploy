@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { signOut } from "next-auth/react";
-import Image from "next/image";
+import { Button } from '@/components/ui/button';
+import { signOut } from 'next-auth/react';
+import Image from 'next/image';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
-import { Route } from "next";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect } from 'react';
+import { Route } from 'next';
 
 export function User() {
   const { data: session } = useSession();
@@ -26,8 +26,8 @@ export function User() {
     const accessToken = session?.user?.accessToken || undefined;
 
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/logout`, {
-      method: "POST",
-      body: JSON.stringify({ accessToken }),
+      method: 'POST',
+      body: JSON.stringify({ accessToken })
     })
       .then((res) => res.json())
       .then((data) => {
@@ -46,7 +46,7 @@ export function User() {
   }, [router, session]);
 
   useEffect(() => {
-    if (session?.error === "RefreshAccessTokenError") {
+    if (session?.error === 'RefreshAccessTokenError') {
       // remember that error?
       // force the user to log out if the session has RefreshAccessTokenError
       logout();
@@ -56,10 +56,20 @@ export function User() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
+        <Button
+          variant="outline"
+          size="icon"
+          className="overflow-hidden rounded-full"
+        >
           <Image
-            src={user?.image ?? "https://upload.wikimedia.org/wikipedia/en/2/2e/Tony_Soprano_2.jpg"}
-            loader={() => user?.image ?? "https://upload.wikimedia.org/wikipedia/en/2/2e/Tony_Soprano_2.jpg"}
+            src={
+              user?.image ??
+              'https://assets.brasildefato.com.br/2024/09/image_processing20220512-20730-jb29gt.jpeg'
+            }
+            loader={() =>
+              user?.image ??
+              'https://assets.brasildefato.com.br/2024/09/image_processing20220512-20730-jb29gt.jpeg'
+            }
             width={36}
             height={36}
             alt="Avatar"

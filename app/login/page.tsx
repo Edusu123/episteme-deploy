@@ -8,6 +8,7 @@ import { Route } from 'next';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { toast } from 'sonner';
+import { Loader, LoaderCircle } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -15,8 +16,10 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { resolvedTheme } = useTheme();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     const callbackUrl = searchParams.get('callbackUrl');
     e.preventDefault();
 
@@ -39,6 +42,8 @@ export default function LoginPage() {
         }
       }
     );
+
+    setLoading(false);
   };
 
   return (
@@ -109,7 +114,7 @@ export default function LoginPage() {
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               type="submit"
             >
-              Entrar
+              {loading ? <LoaderCircle className="animate-spin" /> : 'Entrar'}
             </button>
           </div>
 
