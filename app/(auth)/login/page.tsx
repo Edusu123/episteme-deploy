@@ -1,7 +1,7 @@
 'use client';
 
 import { signIn, SignInResponse } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Route } from 'next';
 import { useRouter } from 'next/navigation';
@@ -12,12 +12,29 @@ import { CustomButton } from '@/components/ui/custom/custom-button';
 import ThemeSwitch from '@/components/ui/theme-switch';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { resolvedTheme } = useTheme();
+  const theme = useTheme();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
+
+  const handleInitialMessages = async () => {
+    const success = searchParams.get('activationSuccess');
+
+    if (success != null) {
+      toast.success('Conta ativada com sucesso!');
+      return;
+    }
+
+    const fail = searchParams.get('activationFail');
+
+    if (fail != null) {
+      toast.error('A conta não foi ativada. Por favor, tente novamente.');
+      return;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +64,10 @@ export default function LoginPage() {
     setLoading(false);
   };
 
+  useEffect(() => {
+    handleInitialMessages();
+  }, []);
+
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="flex flex-row justify-end mb-2 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -56,7 +77,7 @@ export default function LoginPage() {
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
           className="mx-auto h-max rounded-md w-auto"
-          src={`${resolvedTheme === 'dark' ? 'episteme-dark-high-resolution-logo.webp' : 'episteme-high-resolution-logo.webp'}`}
+          src={`${theme.resolvedTheme === 'dark' ? 'episteme-dark-high-resolution-logo.webp' : 'episteme-high-resolution-logo.webp'}`}
           alt="Your Company"
         />
       </div>
