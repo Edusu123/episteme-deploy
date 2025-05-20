@@ -3,12 +3,13 @@
 import { signIn, SignInResponse } from 'next-auth/react';
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Input } from '@/components/ui/input';
 import { Route } from 'next';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { toast } from 'sonner';
-import { Loader, LoaderCircle } from 'lucide-react';
+import { CustomInput } from '@/components/ui/custom/custom-input';
+import { CustomButton } from '@/components/ui/custom/custom-button';
+import ThemeSwitch from '@/components/ui/theme-switch';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -19,9 +20,9 @@ export default function LoginPage() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
     const callbackUrl = searchParams.get('callbackUrl');
-    e.preventDefault();
 
     await signIn('credentials', { email, password, redirect: false }).then(
       (res: SignInResponse | undefined) => {
@@ -48,9 +49,13 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex flex-row justify-end mb-2 sm:mx-auto sm:w-full sm:max-w-sm">
+        <ThemeSwitch />
+      </div>
+
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
-          className="mx-auto h-max w-auto"
+          className="mx-auto h-max rounded-md w-auto"
           src={`${resolvedTheme === 'dark' ? 'episteme-dark-high-resolution-logo.webp' : 'episteme-high-resolution-logo.webp'}`}
           alt="Your Company"
         />
@@ -59,70 +64,33 @@ export default function LoginPage() {
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form
           onSubmit={handleSubmit}
-          className="space-y-6"
+          className="bg-white dark:bg-[#020916] rounded-md p-3 space-y-6"
           action="#"
           method="POST"
         >
-          <div>
-            <label
-              className={`block text-sm/6 font-medium ${resolvedTheme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}
-            >
-              E-mail
-            </label>
-            <div className="mt-2">
-              <Input
-                className="block w-full rounded-md px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                id="email"
-                name="email"
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                type="email"
-              />
-            </div>
-          </div>
+          <CustomInput
+            id="email"
+            label={'E-mail'}
+            name="email"
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            type="email"
+          />
+          <CustomInput
+            extraMessage="Esqueceu sua senha?"
+            extraMessageLink="#"
+            id="password"
+            label={'Senha'}
+            name="password"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            type="password"
+          />
+
+          <CustomButton isLoading={loading} text={'Entrar'} type="submit" />
 
           <div>
-            <div className="flex items-center justify-between">
-              <label
-                className={`block text-sm/6 font-medium ${resolvedTheme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}
-              >
-                Senha
-              </label>
-              <div className="text-sm">
-                <a
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
-                  href="#"
-                >
-                  Esqueceu sua senha?
-                </a>
-              </div>
-            </div>
-            <div className="mt-2">
-              <Input
-                className="block w-full rounded-md px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                id="password"
-                name="password"
-                required
-                type="password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div>
-            <button
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              type="submit"
-            >
-              {loading ? <LoaderCircle className="animate-spin" /> : 'Entrar'}
-            </button>
-          </div>
-
-          <div>
-            <button
-              className="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              type="submit"
-            >
+            <button className="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
               <svg
                 className="w-5 h-5 mr-2"
                 viewBox="0 0 21 20"
@@ -161,17 +129,16 @@ export default function LoginPage() {
               <div>Entrar com Google</div>
             </button>
           </div>
+          <p className="mt-10 text-center text-sm/6 text-gray-500">
+            Não possui uma conta?{' '}
+            <a
+              className="font-semibold text-indigo-600 hover:text-indigo-500"
+              href="/register"
+            >
+              Registre-se aqui!
+            </a>
+          </p>
         </form>
-
-        <p className="mt-10 text-center text-sm/6 text-gray-500">
-          Não possui uma conta?{' '}
-          <a
-            className="font-semibold text-indigo-600 hover:text-indigo-500"
-            href="#"
-          >
-            Registre-se aqui!
-          </a>
-        </p>
       </div>
     </div>
   );
