@@ -28,6 +28,7 @@ const CustomFileInput = forwardRef<HTMLInputElement, UploadFileProps>(
 
     const handleDragOver = (e: any) => {
       e.preventDefault();
+      setIsDragging(true);
     };
 
     const handleDrop = (e: any) => {
@@ -41,6 +42,9 @@ const CustomFileInput = forwardRef<HTMLInputElement, UploadFileProps>(
     return (
       <div
         className="flex items-center justify-center w-full"
+        onClick={() => {
+          document.getElementById('fileInput')?.click();
+        }}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
         onDragOver={handleDragOver}
@@ -84,6 +88,7 @@ const CustomFileInput = forwardRef<HTMLInputElement, UploadFileProps>(
           <input
             accept="image/*"
             className="hidden"
+            id="fileInput"
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               if (e.target.files) handleChange(e.target.files[0]);
             }}

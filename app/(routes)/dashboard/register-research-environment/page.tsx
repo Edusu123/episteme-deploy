@@ -1,37 +1,49 @@
 'use client';
 
+import { CustomFileInput } from '@/components/ui/custom/custom-file-input';
 import { CustomInput } from '@/components/ui/custom/custom-input';
 import RedirectButton from '@/components/ui/custom/redirect-button';
 import { TagsInput } from '@/components/ui/custom/tags-input';
-import { CameraIcon, CircleChevronLeft } from 'lucide-react';
-import { redirect } from 'next/navigation';
+import { AxiosResponse } from 'axios';
+import { CircleChevronLeft } from 'lucide-react';
+import { redirect, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { CgSpinner } from 'react-icons/cg';
-import { createResearch } from 'services/research';
+import { createResearch, researchProfilePic } from 'services/research';
+import { toast } from 'sonner';
 import { IResearch } from 'types/research';
 
 export default function RegisterResearchEnvironment() {
+  const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<IResearch>({
     title: '',
     description: '',
     emailsToInvite: []
   });
+  const [profilePic, setProfilePic] = useState<File | undefined>();
 
-  const onSave = () => {
+  const onSave = async () => {
     setIsLoading(true);
-    createResearch(data)
-      .then((r) => {
-        if (r.status === 201) {
-          redirect(
-            process.env.NEXT_PUBLIC_BASE_URL +
-              '/dashboard?showResearchCreationSuccess=true'
-          );
+
+    createResearch(data, profilePic)
+      .then((response: AxiosResponse) => {
+        if (response.status == 200 || response.status === 201) {
+          router.push('/dashboard?showResearchCreationSuccess=true');
         } else {
+          toast.error(
+            'Ocorreu um erro com a sua solicitação. Por favor, tente novamente.'
+          );
+
           setIsLoading(false);
         }
       })
-      .finally(() => {
+      .catch(() => {
+        toast.error(
+          'Ocorreu uma exceção com a sua solicitação. Por favor, tente novamente.'
+        );
+
         setIsLoading(false);
       });
   };
@@ -97,40 +109,12 @@ export default function RegisterResearchEnvironment() {
                 </div>
               </div>
 
-              <div className="col-span-full">
-                <label
-                  htmlFor="cover-photo"
-                  className={`block text-sm/6 font-medium dark:text-gray-100 text-gray-900'}`}
-                >
-                  Imagem de perfil
-                </label>
-                <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 dark:border-gray-100/25 px-6 py-10">
-                  <div className="text-center">
-                    <CameraIcon
-                      aria-hidden="true"
-                      className="mx-auto size-12 text-gray-300"
-                    />
-                    <div className="mt-4 flex text-sm/6 text-gray-600">
-                      <label
-                        className="relative cursor-pointer rounded-md bg-none font-semibold text-indigo-600 focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 focus-within:outline-hidden hover:text-indigo-500"
-                        htmlFor="file-upload"
-                      >
-                        <span>Selecione um arquivo</span>
-                        <input
-                          id="file-upload"
-                          name="file-upload"
-                          type="file"
-                          className="sr-only"
-                        />
-                      </label>
-                      <p className="pl-1">ou clique e arraste até aqui</p>
-                    </div>
-                    <p className="text-xs/5 text-gray-600">
-                      PNG, JPG, GIF up to 10MB
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <CustomFileInput
+                fileName={profilePic?.name}
+                handleChange={(file: File) => {
+                  setProfilePic(file);
+                }}
+              />
             </div>
           </div>
         </div>

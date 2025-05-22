@@ -1,15 +1,26 @@
+'use client';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ResearchTable } from './research-table';
-import { redirect } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 import RedirectButton from '@/components/ui/custom/redirect-button';
-import { newOffset, totalResearchEnvironments, researchEnvironments } from 'app/api/seed/mocks';
+import {
+  newOffset,
+  totalResearchEnvironments,
+  researchEnvironments
+} from 'app/api/seed/mocks';
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 
-export default async function ProductsPage(props: {
-  searchParams: Promise<{ q: string; offset: string }>;
-}) {
-  const searchParams = await props.searchParams;
+export default function ProductsPage() {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get('showResearchCreationSuccess'))
+      toast.success('Novo ambiente criado com sucesso!');
+  }, []);
 
   return (
     <Tabs defaultValue="all">
