@@ -1,13 +1,23 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
-import { TableCell, TableRow } from "@/components/ui/table";
-import { SelectProduct } from "@/lib/db";
-import { deleteProduct } from "./actions";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import Image from 'next/image';
+import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, SquareArrowOutUpRight } from 'lucide-react';
+import { TableCell, TableRow } from '@/components/ui/table';
+import { SelectProduct } from '@/lib/db';
+import { deleteProduct } from './actions';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 
 export function Product({ researchEnvironment }: { researchEnvironment: any }) {
   return (
@@ -28,7 +38,9 @@ export function Product({ researchEnvironment }: { researchEnvironment: any }) {
           {researchEnvironment.status}
         </Badge>
       </TableCell>
-      <TableCell className="hidden md:table-cell">{researchEnvironment.description}</TableCell>
+      <TableCell className="hidden md:table-cell">
+        {researchEnvironment.description}
+      </TableCell>
       <TableCell className="hidden md:table-cell">
         <div className="flex -space-x-2 rtl:space-x-reverse">
           {researchEnvironment.people.map((x: any) => {
@@ -53,7 +65,9 @@ export function Product({ researchEnvironment }: { researchEnvironment: any }) {
           })}
         </div>
       </TableCell>
-      <TableCell className="hidden md:table-cell">{researchEnvironment.availableAt.toLocaleDateString("pt-br")}</TableCell>
+      <TableCell className="hidden md:table-cell">
+        {researchEnvironment.availableAt.toLocaleDateString('pt-br')}
+      </TableCell>
       <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -63,14 +77,20 @@ export function Product({ researchEnvironment }: { researchEnvironment: any }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href={`/dashboard/research-environment/${researchEnvironment.id}`}>View</Link>
+              <Link
+                className="cursor-pointer flex flex-row justify-between"
+                href={`/dashboard/research-environment/${researchEnvironment.id}`}
+              >
+                Acessar
+                <SquareArrowOutUpRight size={15} />
+              </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Editar</DropdownMenuItem>
             <DropdownMenuItem>
               <form action={deleteProduct}>
-                <button type="submit">Delete</button>
+                <button type="submit">Arquivar</button>
               </form>
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -78,15 +78,15 @@ export function User() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
+        <DropdownMenuItem>Configurações</DropdownMenuItem>
+        <DropdownMenuItem>Suporte</DropdownMenuItem>
         <DropdownMenuSeparator />
         {user ? (
           <DropdownMenuItem>
             <form action={logout}>
-              <button type="submit">Sign Out</button>
+              <button type="submit">Sair</button>
             </form>
           </DropdownMenuItem>
         ) : (

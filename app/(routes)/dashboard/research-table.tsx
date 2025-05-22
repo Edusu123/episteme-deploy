@@ -1,13 +1,34 @@
-"use client";
+'use client';
 
-import { TableHead, TableRow, TableHeader, TableBody, Table } from "@/components/ui/table";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Product } from "./research";
-import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  TableHead,
+  TableRow,
+  TableHeader,
+  TableBody,
+  Table
+} from '@/components/ui/table';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import { Product } from './research';
+import { useRouter } from 'next/navigation';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-export function ResearchTable({ researchEnvironments, offset, totalResearchEnvironments }: { researchEnvironments: any[]; offset: number; totalResearchEnvironments: number }) {
+export function ResearchTable({
+  researchEnvironments,
+  offset,
+  totalResearchEnvironments
+}: {
+  researchEnvironments: any[];
+  offset: number;
+  totalResearchEnvironments: number;
+}) {
   let router = useRouter();
   let researchEnvironmentsPerPage = 5;
 
@@ -23,7 +44,9 @@ export function ResearchTable({ researchEnvironments, offset, totalResearchEnvir
     <Card>
       <CardHeader>
         <CardTitle>Ambientes de pesquisa</CardTitle>
-        <CardDescription>Gerencie suas pesquisas e colaborações.</CardDescription>
+        <CardDescription>
+          Gerencie suas pesquisas e colaborações.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -44,7 +67,10 @@ export function ResearchTable({ researchEnvironments, offset, totalResearchEnvir
           </TableHeader>
           <TableBody>
             {researchEnvironments.map((researchEnvironment) => (
-              <Product key={researchEnvironment.id} researchEnvironment={researchEnvironment} />
+              <Product
+                key={researchEnvironment.id}
+                researchEnvironment={researchEnvironment}
+              />
             ))}
           </TableBody>
         </Table>
@@ -52,18 +78,30 @@ export function ResearchTable({ researchEnvironments, offset, totalResearchEnvir
       <CardFooter>
         <form className="flex items-center w-full justify-between">
           <div className="text-xs text-muted-foreground">
-            Exibindo{" "}
+            {/* Exibindo{" "}
             <strong>
               {Math.max(0, Math.min(offset - researchEnvironmentsPerPage, totalResearchEnvironments) + 1)}-{offset}
             </strong>{" "}
-            de <strong>{totalResearchEnvironments}</strong> products
+            de <strong>{totalResearchEnvironments}</strong> products */}
           </div>
           <div className="flex">
-            <Button formAction={prevPage} variant="ghost" size="sm" type="submit" disabled={offset === researchEnvironmentsPerPage}>
+            <Button
+              formAction={prevPage}
+              variant="ghost"
+              size="sm"
+              type="submit"
+              disabled={true} //{offset === researchEnvironmentsPerPage}
+            >
               <ChevronLeft className="mr-2 h-4 w-4" />
               Anterior
             </Button>
-            <Button formAction={nextPage} variant="ghost" size="sm" type="submit" disabled={offset + researchEnvironmentsPerPage > totalResearchEnvironments}>
+            <Button
+              formAction={nextPage}
+              variant="ghost"
+              size="sm"
+              type="submit"
+              disabled={true} //{ offset + researchEnvironmentsPerPage > totalResearchEnvironments }
+            >
               Próxima
               <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
