@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -8,7 +9,7 @@ import { SelectProduct } from "@/lib/db";
 import { deleteProduct } from "./actions";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-export function Product({ product }: { product: any }) {
+export function Product({ researchEnvironment }: { researchEnvironment: any }) {
   return (
     <TableRow>
       <TableCell className="hidden sm:table-cell">
@@ -16,21 +17,21 @@ export function Product({ product }: { product: any }) {
           alt="Product image"
           className="aspect-square rounded-md object-cover"
           height="64"
-          src={product.imageUrl}
-          loader={() => product.imageUrl}
+          src={researchEnvironment.imageUrl}
+          loader={() => researchEnvironment.imageUrl}
           width="64"
         />
       </TableCell>
-      <TableCell className="font-medium">{product.name}</TableCell>
+      <TableCell className="font-medium">{researchEnvironment.name}</TableCell>
       <TableCell>
         <Badge variant="outline" className="capitalize">
-          {product.status}
+          {researchEnvironment.status}
         </Badge>
       </TableCell>
-      <TableCell className="hidden md:table-cell">{product.description}</TableCell>
+      <TableCell className="hidden md:table-cell">{researchEnvironment.description}</TableCell>
       <TableCell className="hidden md:table-cell">
         <div className="flex -space-x-2 rtl:space-x-reverse">
-          {product.people.map((x: any) => {
+          {researchEnvironment.people.map((x: any) => {
             return (
               <div className="hover:text-foreground" key={x.name}>
                 <Tooltip>
@@ -52,7 +53,7 @@ export function Product({ product }: { product: any }) {
           })}
         </div>
       </TableCell>
-      <TableCell className="hidden md:table-cell">{product.availableAt.toLocaleDateString("pt-br")}</TableCell>
+      <TableCell className="hidden md:table-cell">{researchEnvironment.availableAt.toLocaleDateString("pt-br")}</TableCell>
       <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -63,6 +64,9 @@ export function Product({ product }: { product: any }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem asChild>
+              <Link href={`/dashboard/research-environment/${researchEnvironment.id}`}>View</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Edit</DropdownMenuItem>
             <DropdownMenuItem>
               <form action={deleteProduct}>

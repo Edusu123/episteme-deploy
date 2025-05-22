@@ -2,14 +2,14 @@
 
 import { TableHead, TableRow, TableHeader, TableBody, Table } from "@/components/ui/table";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Product } from "./product";
+import { Product } from "./research";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export function ProductsTable({ products, offset, totalProducts }: { products: any[]; offset: number; totalProducts: number }) {
+export function ResearchTable({ researchEnvironments, offset, totalResearchEnvironments }: { researchEnvironments: any[]; offset: number; totalResearchEnvironments: number }) {
   let router = useRouter();
-  let productsPerPage = 5;
+  let researchEnvironmentsPerPage = 5;
 
   function prevPage() {
     router.back();
@@ -43,8 +43,8 @@ export function ProductsTable({ products, offset, totalProducts }: { products: a
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product) => (
-              <Product key={product.id} product={product} />
+            {researchEnvironments.map((researchEnvironment) => (
+              <Product key={researchEnvironment.id} researchEnvironment={researchEnvironment} />
             ))}
           </TableBody>
         </Table>
@@ -54,16 +54,16 @@ export function ProductsTable({ products, offset, totalProducts }: { products: a
           <div className="text-xs text-muted-foreground">
             Exibindo{" "}
             <strong>
-              {Math.max(0, Math.min(offset - productsPerPage, totalProducts) + 1)}-{offset}
+              {Math.max(0, Math.min(offset - researchEnvironmentsPerPage, totalResearchEnvironments) + 1)}-{offset}
             </strong>{" "}
-            de <strong>{totalProducts}</strong> products
+            de <strong>{totalResearchEnvironments}</strong> products
           </div>
           <div className="flex">
-            <Button formAction={prevPage} variant="ghost" size="sm" type="submit" disabled={offset === productsPerPage}>
+            <Button formAction={prevPage} variant="ghost" size="sm" type="submit" disabled={offset === researchEnvironmentsPerPage}>
               <ChevronLeft className="mr-2 h-4 w-4" />
               Anterior
             </Button>
-            <Button formAction={nextPage} variant="ghost" size="sm" type="submit" disabled={offset + productsPerPage > totalProducts}>
+            <Button formAction={nextPage} variant="ghost" size="sm" type="submit" disabled={offset + researchEnvironmentsPerPage > totalResearchEnvironments}>
               Próxima
               <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
