@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsTrigger, TabsList, TabsContent } from '@/components/ui/tabs';
 import { researchEnvironments } from 'app/api/seed/mocks';
@@ -18,35 +13,35 @@ const mockTasks = {
   todo: [
     {
       id: 1,
-      title: "Revisar metodologia",
-      description: "Revisar e validar a metodologia da pesquisa",
-      assignee: "João Silva",
-      dueDate: "2025-05-23"
+      title: 'Revisar metodologia',
+      description: 'Revisar e validar a metodologia da pesquisa',
+      assignee: 'João Silva',
+      dueDate: '2025-05-23'
     },
     {
       id: 2,
-      title: "Coletar dados",
-      description: "Iniciar coleta de dados para análise",
-      assignee: "Maria Santos",
-      dueDate: "2025-05-24"
+      title: 'Coletar dados',
+      description: 'Iniciar coleta de dados para análise',
+      assignee: 'Maria Santos',
+      dueDate: '2025-05-24'
     }
   ],
   inProgress: [
     {
       id: 3,
-      title: "Análise preliminar",
-      description: "Realizar análise preliminar dos dados coletados",
-      assignee: "Pedro Oliveira",
-      dueDate: "2025-05-25"
+      title: 'Análise preliminar',
+      description: 'Realizar análise preliminar dos dados coletados',
+      assignee: 'Pedro Oliveira',
+      dueDate: '2025-05-25'
     }
   ],
   done: [
     {
       id: 4,
-      title: "Definir objetivos",
-      description: "Definir objetivos e metas da pesquisa",
-      assignee: "João Silva",
-      dueDate: "2025-05-26"
+      title: 'Definir objetivos',
+      description: 'Definir objetivos e metas da pesquisa',
+      assignee: 'João Silva',
+      dueDate: '2025-05-26'
     }
   ]
 };
@@ -64,9 +59,10 @@ async function getResearchEnvironment(id: string) {
 export default async function ResearchEnvironment({
   params
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const researchEnvironment = await getResearchEnvironment(params.id);
+  const { id } = await params;
+  const researchEnvironment = await getResearchEnvironment(id);
 
   return (
     <div className="space-y-6">
