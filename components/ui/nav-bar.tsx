@@ -49,7 +49,7 @@ export default function DesktopNav() {
           <BookText className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/customers" label="Pessoas">
+        <NavItem href="/people" label="Pessoas">
           <Users2 className="h-5 w-5" />
         </NavItem>
 
@@ -57,11 +57,11 @@ export default function DesktopNav() {
           <BookCopy className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Calendário e Cronogramas">
+        <NavItem href="/calendar" label="Calendário e Cronogramas">
           <Calendar className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Atividades">
+        <NavItem href="/tasks" label="Atividades">
           <CheckCheck className="h-5 w-5" />
         </NavItem>
 
