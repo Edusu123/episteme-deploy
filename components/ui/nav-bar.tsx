@@ -41,11 +41,11 @@ export default function DesktopNav() {
           />
         </Link>
 
-        <NavItem href="#" label="Dashboard">
+        <NavItem href="/dashboard" label="Dashboard">
           <Home className="h-6 w-6" />
         </NavItem>
 
-        <NavItem href="#" label="Documentos e Bibliografia">
+        <NavItem href="/documents" label="Documentos e Arquivos">
           <BookText className="h-5 w-5" />
         </NavItem>
 
