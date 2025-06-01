@@ -19,6 +19,19 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 
+const people = [
+  {
+    profilePic:
+      'https://media.licdn.com/dms/image/v2/C4D03AQG7X8IrRQITng/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1517020830148?e=1748476800&v=beta&t=tgAJkHgkcEb0nBtFret-6-vK7AzXRB_3cT4S0Sj2X6o',
+    name: 'João Paulo Papa'
+  },
+  {
+    profilePic:
+      'https://scholar.googleusercontent.com/citations?view_op=view_photo&user=Vua4gxcAAAAJ&citpid=4',
+    name: 'Aparecido Nilceu Marana'
+  }
+];
+
 export function Product({ researchEnvironment }: { researchEnvironment: any }) {
   return (
     <TableRow>
@@ -27,15 +40,16 @@ export function Product({ researchEnvironment }: { researchEnvironment: any }) {
           alt="Product image"
           className="aspect-square rounded-md object-cover"
           height="64"
-          src={researchEnvironment.imageUrl}
-          loader={() => researchEnvironment.imageUrl}
+          src={researchEnvironment.fileUrl}
+          loader={() => researchEnvironment.fileUrl}
           width="64"
         />
       </TableCell>
-      <TableCell className="font-medium">{researchEnvironment.name}</TableCell>
+      <TableCell className="font-medium">{researchEnvironment.title}</TableCell>
       <TableCell>
         <Badge variant="outline" className="capitalize">
-          {researchEnvironment.status}
+          {/* {researchEnvironment.status} */}
+          ativo
         </Badge>
       </TableCell>
       <TableCell className="hidden md:table-cell">
@@ -43,7 +57,7 @@ export function Product({ researchEnvironment }: { researchEnvironment: any }) {
       </TableCell>
       <TableCell className="hidden md:table-cell">
         <div className="flex -space-x-2 rtl:space-x-reverse">
-          {researchEnvironment.people.map((x: any) => {
+          {people.map((x: any) => {
             return (
               <div className="hover:text-foreground" key={x.name}>
                 <Tooltip>
@@ -66,7 +80,7 @@ export function Product({ researchEnvironment }: { researchEnvironment: any }) {
         </div>
       </TableCell>
       <TableCell className="hidden md:table-cell">
-        {researchEnvironment.availableAt.toLocaleDateString('pt-br')}
+        {new Date(researchEnvironment.createdAt).toLocaleDateString('pt-br')}
       </TableCell>
       <TableCell>
         <DropdownMenu>
@@ -81,7 +95,7 @@ export function Product({ researchEnvironment }: { researchEnvironment: any }) {
             <DropdownMenuItem asChild>
               <Link
                 className="cursor-pointer flex flex-row justify-between"
-                href={`/dashboard/research-environment/${researchEnvironment.id}`}
+                href={`/dashboard/research-environment/${researchEnvironment.researchId}`}
               >
                 Acessar
                 <SquareArrowOutUpRight size={15} />

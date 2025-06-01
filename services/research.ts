@@ -36,3 +36,13 @@ export const researchProfilePic = async (researchId: string, image: File) => {
 
   return response;
 };
+
+export const getResearches = async () => {
+  if (api.defaults.headers.Authorization) {
+    const response = await api.get('/researches');
+
+    return response;
+  }
+
+  return null;
+};

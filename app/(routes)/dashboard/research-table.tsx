@@ -68,7 +68,7 @@ export function ResearchTable({
           <TableBody>
             {researchEnvironments.map((researchEnvironment) => (
               <Product
-                key={researchEnvironment.id}
+                key={researchEnvironment.researchId}
                 researchEnvironment={researchEnvironment}
               />
             ))}

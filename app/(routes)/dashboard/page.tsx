@@ -2,25 +2,34 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlusCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { ResearchTable } from './research-table';
-import { redirect, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import RedirectButton from '@/components/ui/custom/redirect-button';
-import {
-  newOffset,
-  totalResearchEnvironments,
-  researchEnvironments
-} from 'app/api/seed/mocks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { getResearches } from 'services/research';
+import { IResearch } from 'types/research';
+import { AxiosResponse } from 'axios';
+import { useSession } from 'next-auth/react';
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
+  const session = useSession();
+
+  const [researches, setResearches] = useState<IResearch[]>([]);
+
+  const getAllResearches = async () => {
+    getResearches().then((r: AxiosResponse | null) => {
+      if (r) setResearches(r.data.researches);
+    });
+  };
 
   useEffect(() => {
+    getAllResearches();
+
     if (searchParams.get('showResearchCreationSuccess'))
       toast.success('Novo ambiente criado com sucesso!');
-  }, []);
+  }, [, session]);
 
   return (
     <Tabs defaultValue="all">
@@ -47,9 +56,9 @@ export default function ProductsPage() {
       </div>
       <TabsContent value="all">
         <ResearchTable
-          researchEnvironments={researchEnvironments}
-          offset={newOffset ?? 0}
-          totalResearchEnvironments={totalResearchEnvironments}
+          researchEnvironments={researches}
+          offset={0}
+          totalResearchEnvironments={researches.length}
         />
       </TabsContent>
     </Tabs>
