@@ -53,7 +53,7 @@ export default function DesktopNav() {
           <Users2 className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Referências">
+        <NavItem href="/references" label="Bibliografia e Referências">
           <BookCopy className="h-5 w-5" />
         </NavItem>
 
