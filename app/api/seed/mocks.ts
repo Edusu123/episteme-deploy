@@ -18,6 +18,12 @@ export const { researchEnvironments } = {
           profilePic:
             'https://scholar.googleusercontent.com/citations?view_op=view_photo&user=Vua4gxcAAAAJ&citpid=4',
           name: 'Aparecido Nilceu Marana'
+        },
+        {
+          id: 'c01048b1-e775-4705-aecf-bc74a2c0415e',
+          profilePic:
+            'https://images.newscientist.com/wp-content/gallery/dn21599-chomsky/00541afae30.jpg',
+          name: 'Noam Chomsky'
         }
       ],
       createdAt: new Date()
@@ -34,6 +40,12 @@ export const { researchEnvironments } = {
           profilePic:
             'https://cdn.adscientificindex.com/pictures/f2/883709.jpg',
           name: 'Kelton Augusto'
+        },
+        {
+          id: 'c01048b1-e775-4705-aecf-bc74a2c0415e',
+          profilePic:
+            'https://images.newscientist.com/wp-content/gallery/dn21599-chomsky/00541afae30.jpg',
+          name: 'Noam Chomsky'
         }
       ],
       createdAt: new Date()
@@ -282,6 +294,134 @@ export const { references } = {
         }
       ],
       createdOn: new Date()
+    }
+  ]
+};
+
+export const { people: mockPeople } = {
+  people: [
+    {
+      id: '29b77f9d-81da-4d72-be95-5081568f3d3d',
+      profilePic:
+        'https://media.licdn.com/dms/image/v2/C4D03AQG7X8IrRQITng/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1517020830148?e=1748476800&v=beta&t=tgAJkHgkcEb0nBtFret-6-vK7AzXRB_3cT4S0Sj2X6o',
+      name: 'João Paulo Papa',
+      email: 'joao@papa.com',
+      mutualResearches: [
+        {
+          id: '8f14057b-8674-44a7-9d23-ae1410844987',
+          imageUrl: 'https://www.fc.unesp.br/Home/Pesquisa/CPP/recogna.jpg',
+          title: 'Recogna',
+          isOwner: true
+        }
+      ],
+      createdAt: new Date()
+    },
+    {
+      id: '725bb052-7ba3-46ff-a79a-a6bfe2f70c0f',
+      profilePic:
+        'https://scholar.googleusercontent.com/citations?view_op=view_photo&user=Vua4gxcAAAAJ&citpid=4',
+      name: 'Aparecido Nilceu Marana',
+      email: 'aparecido@marana.com',
+      mutualResearches: [
+        {
+          id: '8f14057b-8674-44a7-9d23-ae1410844987',
+          imageUrl: 'https://www.fc.unesp.br/Home/Pesquisa/CPP/recogna.jpg',
+          title: 'Recogna',
+          isOwner: true
+        }
+      ],
+      createdAt: new Date()
+    },
+    {
+      id: '003e0ec5-3692-48ef-97fe-6aabcefe5c70',
+      profilePic: 'https://cdn.adscientificindex.com/pictures/f2/883709.jpg',
+      name: 'Kelton Augusto',
+      email: 'kelton@augusto.com',
+      mutualResearches: [
+        {
+          id: '46ab7905-f957-4ba8-912f-981b4510366f',
+          imageUrl: 'https://www.fc.unesp.br/Home/Pesquisa/CPP/lars.jpg',
+          title: 'LARS',
+          isOwner: false
+        }
+      ],
+      createdAt: new Date()
+    },
+    {
+      id: 'bb5104e7-2f3a-4a02-a236-28951cf10df8',
+      profilePic:
+        'https://s1.static.brasilescola.uol.com.br/img/2019/10/michel-foucault.jpg',
+      name: 'Michel Foucault',
+      email: 'michel@foucault.com',
+      mutualResearches: [
+        {
+          id: '8e9e1824-bacc-4dc1-82fa-1ca38150d798',
+          imageUrl: 'https://i.ibb.co/27d6xV4r/CPOL-LAB-png-B002.png',
+          title: 'CPOL/LAB',
+          isOwner: false
+        }
+      ],
+      createdAt: new Date()
+    },
+    {
+      id: 'c01048b1-e775-4705-aecf-bc74a2c0415e',
+      profilePic:
+        'https://images.newscientist.com/wp-content/gallery/dn21599-chomsky/00541afae30.jpg',
+      name: 'Noam Chomsky',
+      email: 'noam@chomsky.com',
+      mutualResearches: [
+        {
+          id: '8e9e1824-bacc-4dc1-82fa-1ca38150d798',
+          imageUrl: 'https://i.ibb.co/27d6xV4r/CPOL-LAB-png-B002.png',
+          title: 'CPOL/LAB',
+          isOwner: false
+        },
+        {
+          id: '8f14057b-8674-44a7-9d23-ae1410844987',
+          imageUrl: 'https://www.fc.unesp.br/Home/Pesquisa/CPP/recogna.jpg',
+          title: 'Recogna',
+          isOwner: true
+        },
+        {
+          id: '46ab7905-f957-4ba8-912f-981b4510366f',
+          imageUrl: 'https://www.fc.unesp.br/Home/Pesquisa/CPP/lars.jpg',
+          title: 'LARS',
+          isOwner: false
+        }
+      ],
+      createdAt: new Date()
+    },
+    {
+      id: 'a557ddb2-53d0-4290-9c25-fc22a7e19809',
+      profilePic:
+        'https://i.pinimg.com/564x/cd/0a/a1/cd0aa1c0ba83091a8aacf70609f8ce43.jpg',
+      name: 'Jean Sartre',
+      email: 'jean@sartre.com',
+      mutualResearches: [
+        {
+          id: '8e9e1824-bacc-4dc1-82fa-1ca38150d798',
+          imageUrl: 'https://i.ibb.co/27d6xV4r/CPOL-LAB-png-B002.png',
+          title: 'CPOL/LAB',
+          isOwner: false
+        }
+      ],
+      createdAt: new Date()
+    },
+    {
+      id: '015a2bca-29c6-420d-a4d4-3e726a72045a',
+      profilePic:
+        'https://hips.hearstapps.com/hmg-prod/images/simone-de-beauvoir-9269063-1-402.jpg',
+      name: 'Simone de Beauvoir',
+      email: 'simone@beauvoir.com',
+      mutualResearches: [
+        {
+          id: '8e9e1824-bacc-4dc1-82fa-1ca38150d798',
+          imageUrl: 'https://i.ibb.co/27d6xV4r/CPOL-LAB-png-B002.png',
+          title: 'CPOL/LAB',
+          isOwner: false
+        }
+      ],
+      createdAt: new Date()
     }
   ]
 };

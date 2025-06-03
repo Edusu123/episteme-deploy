@@ -25,8 +25,8 @@ export function ResearchRow({ research, deleteAction }: IProps) {
           alt="Research image"
           className="aspect-square rounded-md object-cover"
           height="64"
-          src={research.imageUrl}
-          loader={() => research.imageUrl}
+          src={research.imageUrl ?? ''}
+          loader={() => research.imageUrl ?? ''}
           width="64"
         />
       </TableCell>
@@ -40,16 +40,20 @@ export function ResearchRow({ research, deleteAction }: IProps) {
       </TableCell>
 
       <TableCell className="hidden md:table-cell">
+        {research.description}
+      </TableCell>
+
+      <TableCell className="hidden md:table-cell">
         <div className="flex -space-x-2 rtl:space-x-reverse">
-          {research.usersList.map((u: IUser) => {
+          {research?.usersList?.map((u: IUser) => {
             return (
               <div className="hover:text-foreground" key={u.id}>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Image
-                      loader={() => u.profilePic}
+                      loader={() => u.profilePic ?? ''}
                       className="w-10 h-10 border-2 border-white rounded-full dark:border-gray-800"
-                      src={u.profilePic}
+                      src={u.profilePic ?? ''}
                       alt=""
                       width="64"
                       height="64"
@@ -65,7 +69,7 @@ export function ResearchRow({ research, deleteAction }: IProps) {
       </TableCell>
 
       <TableCell className="hidden md:table-cell">
-        {research.createdAt.toLocaleDateString('pt-br')}
+        {research.createdAt?.toLocaleDateString('pt-br')}
       </TableCell>
 
       <TableCell>

@@ -46,10 +46,12 @@ export default function ProductsPage() {
 
   useEffect(() => {
     getAllResearches();
+  }, [, session]);
 
+  useEffect(() => {
     if (searchParams.get('showResearchCreationSuccess'))
       toast.success('Novo ambiente criado com sucesso!');
-  }, [, session]);
+  }, []);
 
   return (
     <Tabs defaultValue="all">
