@@ -1,6 +1,6 @@
 'use client';
 
-import { NavItem } from 'app/(routes)/dashboard/nav-item';
+import { NavItem } from '@/components/ui/nav-item';
 import Link from 'next/link';
 import {
   Bell,

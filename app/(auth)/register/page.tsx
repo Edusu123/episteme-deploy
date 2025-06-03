@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { register } from 'services/auth';
 import { toast } from 'sonner';
-import { IUserRegister } from 'types/user';
+import { IUser } from 'types/user';
 
 export default function page() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function page() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [disabledSave, setDisabledSave] = useState<boolean>(false);
-  const [user, setUser] = useState<IUserRegister>({
+  const [user, setUser] = useState<IUser>({
     name: '',
     email: '',
     password: '',

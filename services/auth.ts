@@ -1,7 +1,7 @@
-import { IUserRegister } from 'types/user';
+import { IUser } from 'types/user';
 import { api } from './base/api';
 
-export const register = async (data: IUserRegister) => {
+export const register = async (data: IUser) => {
   const response = await api.post('/register', data);
   return response;
 };
