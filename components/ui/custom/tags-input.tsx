@@ -37,7 +37,7 @@ export interface TagsInputProps {
   maxTagsCount?: number;
 }
 
-const defaultSeparators = ['Enter', 'Tab'];
+const defaultSeparators = ['Enter', 'Tab', ' '];
 
 function Tag({ text, remove, disabled, className }: TagProps) {
   const handleOnRemove = (e: any) => {
@@ -140,8 +140,8 @@ const TagsInput = ({
   return (
     <div
       aria-labelledby={name}
-      className=" flex flex-wrap items-center gap-2 rounded-md rounded-md border border-input bg-background px-3 py-2 text-sm   
-			focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 mt-2"
+      className="flex flex-wrap items-center gap-2 rounded-md rounded-md border border-input bg-background px-3 py-2 text-sm   
+			focus-within:outline-none focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1 mt-2"
     >
       {tags.map((tag: any) => (
         <Tag
@@ -154,7 +154,7 @@ const TagsInput = ({
       ))}
 
       <input
-        className="h-10 flex-grow bg-transparent placeholder:text-neutral-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring  focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+        className="h-10 flex-grow bg-transparent placeholder:text-neutral-400 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
         type="text"
         name={name}
         placeholder={placeholderText}
