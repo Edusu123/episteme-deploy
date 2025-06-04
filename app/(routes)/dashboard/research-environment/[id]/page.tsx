@@ -52,7 +52,7 @@ async function getResearchEnvironment(id: string) {
 
   // For now, return mock data regardless of ID
   return researchEnvironments.find(
-    (researchEnvironment) => researchEnvironment.id === Number(id)
+    (researchEnvironment) => researchEnvironment.researchId === id
   );
 }
 
@@ -68,7 +68,7 @@ export default async function ResearchEnvironment({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">{researchEnvironment?.name}</h1>
+          <h1 className="text-2xl font-bold">{researchEnvironment?.title}</h1>
           <p className="text-sm text-muted-foreground">
             Detalhes do ambiente de pesquisa
           </p>
