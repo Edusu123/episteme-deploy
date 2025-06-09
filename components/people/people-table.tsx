@@ -85,7 +85,7 @@ export function PeopleTable({ people, offset, total, peoplePerPage }: IProps) {
               {Math.min(offset, total)}
             </strong>{' '}
             de
-            <strong>{' ' + total}</strong> referências
+            <strong>{' ' + total}</strong> pessoas
           </div>
         </div>
         <div className="flex">

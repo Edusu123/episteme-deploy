@@ -105,7 +105,7 @@ export function ResearchesTable({
               {Math.min(offset, total)}
             </strong>{' '}
             de
-            <strong>{' ' + total}</strong> referências
+            <strong>{' ' + total}</strong> ambientes de pesquisa
           </div>
         </div>
         <div className="flex">
