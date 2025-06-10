@@ -1,4 +1,4 @@
-'use server';
+'use client';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 import Image from 'next/image';
@@ -12,9 +12,9 @@ interface IProps {
   usersList: ProfileInfo[];
 }
 
-export default async function UsersList({ usersList }: IProps) {
+export default function UsersList({ usersList }: IProps) {
   return (
-    <div>
+    <div className="flex -space-x-2 rtl:space-x-reverse">
       {usersList.map((x: ProfileInfo) => {
         return (
           <div className="hover:text-foreground" key={x.name}>
@@ -22,16 +22,16 @@ export default async function UsersList({ usersList }: IProps) {
               <TooltipTrigger asChild>
                 <Image
                   loader={() => x.profilePic}
-                  className="w-10 h-10 border-2 border-white rounded-full dark:border-gray-800"
+                  className="w-10 h-10 border-2 border-white object-contain rounded-full dark:border-gray-800"
                   src={x.profilePic}
                   alt=""
                   width="64"
                   height="64"
+                  unoptimized={true}
                 />
               </TooltipTrigger>
               <TooltipContent side="left">{x.name}</TooltipContent>
             </Tooltip>
-            {/* <span className="sr-only">{x.name}</span> */}
           </div>
         );
       })}

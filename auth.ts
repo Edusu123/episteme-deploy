@@ -97,6 +97,7 @@ export const config = {
   },
   callbacks: {
     async jwt({ token, user, account }) {
+      // initial login
       if (account && user) {
         token.id = user.id;
         token.accessToken = user.accessToken;
@@ -108,7 +109,7 @@ export const config = {
         );
 
         if (decodedAccessToken) {
-          token.userId = decodedAccessToken['sub'] as string;
+          token.userId = decodedAccessToken.userId;
           token.accessTokenExpires = decodedAccessToken['exp'] * 1000;
           token.email = decodedAccessToken.email;
         }
@@ -133,7 +134,7 @@ export const config = {
         ...session,
         user: {
           ...session.user,
-          id: token.id as string,
+          id: token.userId as string,
           email: token.email as string,
           cognitoGroups: token.cognitoGroups as string[],
           accessToken: token.accessToken as string,

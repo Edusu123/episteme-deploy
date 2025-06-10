@@ -70,10 +70,12 @@ export function User() {
               user?.image ??
               'https://assets.brasildefato.com.br/2024/09/image_processing20220512-20730-jb29gt.jpeg'
             }
-            width={36}
-            height={36}
+            width="36"
+            height="36"
             alt="Avatar"
             className="overflow-hidden rounded-full"
+            style={{ width: 'auto', height: 'auto' }}
+            unoptimized={true}
           />
         </Button>
       </DropdownMenuTrigger>

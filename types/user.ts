@@ -10,3 +10,9 @@ export interface IUser {
   mutualResearches?: IResearch[];
   createdAt?: Date;
 }
+
+export interface IUserInfo {
+  id: string;
+  name: string;
+  profilePic: string;
+}
