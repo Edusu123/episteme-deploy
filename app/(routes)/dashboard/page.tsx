@@ -45,12 +45,15 @@ export default function ProductsPage() {
   };
 
   useEffect(() => {
-    getAllResearches();
-  }, [, session]);
+    if (session.status == 'authenticated') getAllResearches();
+  }, [session]);
 
   useEffect(() => {
     if (searchParams.get('showResearchCreationSuccess'))
       toast.success('Novo ambiente criado com sucesso!');
+
+    if (searchParams.get('invitationAcceptanceSuccess'))
+      toast.success('Convite aceito com sucesso!');
   }, []);
 
   return (

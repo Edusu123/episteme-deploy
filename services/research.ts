@@ -46,3 +46,13 @@ export const getResearches = async () => {
 
   return null;
 };
+
+export const acceptInvitation = async (token: string) => {
+  if (api.defaults.headers.Authorization) {
+    const response = await api.post(`/researches/invite/${token}/accept`);
+
+    return response;
+  }
+
+  return null;
+};
