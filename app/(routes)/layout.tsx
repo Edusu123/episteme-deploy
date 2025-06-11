@@ -2,11 +2,17 @@
 
 import Link from 'next/link';
 import {
+  Bell,
+  BookCopy,
+  BookText,
+  Calendar,
+  CheckCheck,
   Home,
   LineChart,
   Package,
   Package2,
   PanelLeft,
+  PiggyBank,
   ShoppingCart,
   Users2
 } from 'lucide-react';
@@ -19,7 +25,12 @@ import {
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger
+} from '@/components/ui/sheet';
 import { Analytics } from '@vercel/analytics/react';
 import { User } from './dashboard/user';
 import { SearchInput } from './dashboard/search';
@@ -28,6 +39,7 @@ import DesktopNav from '@/components/ui/nav-bar';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import api from 'services/base/api';
+import { useTheme } from 'next-themes';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const session = useSession();
@@ -58,6 +70,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 }
 
 function MobileNav() {
+  const { resolvedTheme } = useTheme();
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -68,13 +82,24 @@ function MobileNav() {
       </SheetTrigger>
       <SheetContent side="left" className="sm:max-w-xs">
         <nav className="grid gap-6 text-lg font-medium">
-          <Link
-            href="#"
-            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-          >
-            <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-            <span className="sr-only">Vercel</span>
-          </Link>
+          <SheetTitle>
+            <Link
+              href="#"
+              className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground md:text-base"
+            >
+              <img
+                className="mx-auto h-max w-auto"
+                src={
+                  resolvedTheme === 'dark'
+                    ? '/episteme-dark-no-text-high-resolution-logo.webp'
+                    : '/episteme-no-text-high-resolution-logo.webp'
+                }
+                alt="Your Company"
+              />
+              <span className="sr-only">Episteme</span>
+            </Link>
+          </SheetTitle>
+
           <Link
             href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
@@ -82,33 +107,61 @@ function MobileNav() {
             <Home className="h-5 w-5" />
             Dashboard
           </Link>
+
           <Link
             href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <ShoppingCart className="h-5 w-5" />
-            Orders
+            <BookText className="h-5 w-5" />
+            Documentos e Arquivos
           </Link>
+
           <Link
             href="#"
             className="flex items-center gap-4 px-2.5 text-foreground"
           >
-            <Package className="h-5 w-5" />
-            Products
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
             <Users2 className="h-5 w-5" />
-            Customers
+            Pessoas
           </Link>
+
           <Link
             href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <LineChart className="h-5 w-5" />
-            Settings
+            <BookCopy className="h-5 w-5" />
+            Bibliografia e Referências
+          </Link>
+
+          <Link
+            href="#"
+            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+          >
+            <Calendar className="h-5 w-5" />
+            Calendário
+          </Link>
+
+          <Link
+            href="#"
+            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+          >
+            <CheckCheck className="h-5 w-5" />
+            Atividade
+          </Link>
+
+          <Link
+            href="#"
+            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+          >
+            <PiggyBank className="h-5 w-5" />
+            Financeiro
+          </Link>
+
+          <Link
+            href="#"
+            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+          >
+            <Bell className="h-5 w-5" />
+            Notificações
           </Link>
         </nav>
       </SheetContent>
