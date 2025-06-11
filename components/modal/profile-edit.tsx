@@ -153,10 +153,10 @@ export default function ProfileEdit() {
         </div>
 
         <div>
-          {profileInfo.formation?.map((degree: IDegree) => (
+          {profileInfo.formation?.map((degree: IDegree, index: number) => (
             <DegreeFields
               degree={degree}
-              key={`${degree.degreeLevel}-${degree.course}`}
+              key={index}
               profileInfo={profileInfo}
               setProfileInfo={setProfileInfo}
             />
