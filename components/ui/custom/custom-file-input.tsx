@@ -8,12 +8,13 @@ import {
 } from 'react';
 
 interface UploadFileProps extends InputHTMLAttributes<HTMLInputElement> {
+  inputText?: string;
   fileName?: string;
   handleChange: (file: File) => void;
 }
 
 const CustomFileInput = forwardRef<HTMLInputElement, UploadFileProps>(
-  ({ fileName, handleChange, ...props }, ref) => {
+  ({ inputText, fileName, handleChange, ...props }, ref) => {
     const [isDragging, setIsDragging] = useState(false);
 
     const handleDragEnter = (e: any) => {
@@ -52,7 +53,7 @@ const CustomFileInput = forwardRef<HTMLInputElement, UploadFileProps>(
       >
         <label
           htmlFor="dropzone-file"
-          className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+          className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-600"
         >
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             <svg
@@ -71,14 +72,13 @@ const CustomFileInput = forwardRef<HTMLInputElement, UploadFileProps>(
               />
             </svg>
             {fileName ? (
-              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400 justify-center">
                 <span className="font-semibold">{fileName}</span>
               </p>
             ) : (
               <div className="flex flex-col items-center">
-                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                  <span className="font-semibold">Clique para selecionar</span>{' '}
-                  ou arraste e solte
+                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400 flex justify-center">
+                  <span className="font-semibold">{inputText}</span>
                 </p>
 
                 <p className="text-xs text-gray-500 dark:text-gray-400">XML</p>

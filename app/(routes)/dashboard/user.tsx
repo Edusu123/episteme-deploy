@@ -14,13 +14,20 @@ import {
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { Route } from 'next';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { useProfileModal } from 'hooks/modal';
+import { Pen } from 'lucide-react';
+import { CustomInput } from '@/components/ui/custom/custom-input';
+import ProfileEdit from '@/components/modal/profile-edit';
 
 export function User() {
+  const router = useRouter();
+  const settingsModal = useProfileModal();
+
   const { data: session } = useSession();
   const user = session?.user;
-  const router = useRouter();
 
   const logout = useCallback(() => {
     const accessToken = session?.user?.accessToken || undefined;
@@ -54,49 +61,60 @@ export function User() {
   }, [session, logout]);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="overflow-hidden rounded-full"
-        >
-          <Image
-            src={
-              user?.image ??
-              'https://assets.brasildefato.com.br/2024/09/image_processing20220512-20730-jb29gt.jpeg'
-            }
-            loader={() =>
-              user?.image ??
-              'https://assets.brasildefato.com.br/2024/09/image_processing20220512-20730-jb29gt.jpeg'
-            }
-            width="36"
-            height="36"
-            alt="Avatar"
+    <div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            size="icon"
             className="overflow-hidden rounded-full"
-            style={{ width: 'auto', height: 'auto' }}
-            unoptimized={true}
-          />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Configurações</DropdownMenuItem>
-        <DropdownMenuItem>Suporte</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {user ? (
-          <DropdownMenuItem>
-            <form action={logout}>
-              <button type="submit">Sair</button>
-            </form>
+          >
+            <Image
+              src={
+                user?.image ??
+                'https://assets.brasildefato.com.br/2024/09/image_processing20220512-20730-jb29gt.jpeg'
+              }
+              loader={() =>
+                user?.image ??
+                'https://assets.brasildefato.com.br/2024/09/image_processing20220512-20730-jb29gt.jpeg'
+              }
+              width="36"
+              height="36"
+              alt="Avatar"
+              className="overflow-hidden rounded-full"
+              style={{ width: 'auto', height: 'auto' }}
+              unoptimized={true}
+            />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => settingsModal.setModal(true)}
+          >
+            Perfil
           </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem>
-            <Link href="/login">Sign In</Link>
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <DropdownMenuItem>Suporte</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          {user ? (
+            <DropdownMenuItem>
+              <form action={logout}>
+                <button type="submit">Sair</button>
+              </form>
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem>
+              <Link href="/login">Sign In</Link>
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <Dialog open={settingsModal.isOpen} onOpenChange={settingsModal.setModal}>
+        <ProfileEdit />
+      </Dialog>
+    </div>
   );
 }
