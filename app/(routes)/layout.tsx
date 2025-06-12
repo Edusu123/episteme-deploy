@@ -152,14 +152,6 @@ function MobileNav() {
             href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <PiggyBank className="h-5 w-5" />
-            Financeiro
-          </Link>
-
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
             <Bell className="h-5 w-5" />
             Notificações
           </Link>

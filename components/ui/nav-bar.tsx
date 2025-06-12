@@ -65,10 +65,6 @@ export default function DesktopNav() {
           <CheckCheck className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Financeiro">
-          <PiggyBank className="h-5 w-5" />
-        </NavItem>
-
         <NavItem href="#" label="Notificações">
           <Bell className="h-5 w-5" />
         </NavItem>
