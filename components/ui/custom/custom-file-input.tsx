@@ -11,10 +11,11 @@ interface UploadFileProps extends InputHTMLAttributes<HTMLInputElement> {
   inputText?: string;
   fileName?: string;
   handleChange: (file: File) => void;
+  label?: string;
 }
 
 const CustomFileInput = forwardRef<HTMLInputElement, UploadFileProps>(
-  ({ inputText, fileName, handleChange, ...props }, ref) => {
+  ({ inputText, fileName, handleChange, label, ...props }, ref) => {
     const [isDragging, setIsDragging] = useState(false);
 
     const handleDragEnter = (e: any) => {
@@ -51,10 +52,7 @@ const CustomFileInput = forwardRef<HTMLInputElement, UploadFileProps>(
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
-        <label
-          htmlFor="dropzone-file"
-          className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-600"
-        >
+        <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-600">
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             <svg
               className={`w-8 h-8 mb-4 text-gray-500 dark:text-gray-400 ${isDragging && 'animate-ping'}`}
@@ -81,14 +79,16 @@ const CustomFileInput = forwardRef<HTMLInputElement, UploadFileProps>(
                   <span className="font-semibold">{inputText}</span>
                 </p>
 
-                <p className="text-xs text-gray-500 dark:text-gray-400">XML</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {label ?? 'Documento'}
+                </p>
               </div>
             )}
           </div>
           <input
-            accept="image/*"
+            accept={props.accept}
             className="hidden"
-            id="fileInput"
+            id={props.id ?? 'fileInput'}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               if (e.target.files) handleChange(e.target.files[0]);
             }}

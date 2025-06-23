@@ -52,7 +52,7 @@ export function ResearchRow({ research, deleteAction }: IProps) {
                   <TooltipTrigger asChild>
                     <Image
                       loader={() => u.profilePic ?? ''}
-                      className="w-10 h-10 border-2 border-white object-contain rounded-full dark:border-gray-800"
+                      className="cursor-pointer w-10 h-10 border-2 border-white object-contain rounded-full dark:border-gray-800"
                       src={u.profilePic ?? ''}
                       alt=""
                       width="64"

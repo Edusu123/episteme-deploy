@@ -165,20 +165,20 @@ function DashboardBreadcrumb() {
   return (
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
-        <BreadcrumbItem>
+        {/* <BreadcrumbItem>
           <BreadcrumbLink asChild>
             <Link href="#">Dashboard</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator />
+        <BreadcrumbSeparator /> */}
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href="#">Ambiente de pesquisa</Link>
+            <Link href="#">Tarefas</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator />
+        {/* <BreadcrumbSeparator /> */}
         <BreadcrumbItem>
-          <BreadcrumbPage>Todos os ambiente de pesquisa</BreadcrumbPage>
+          {/* <BreadcrumbPage>Todas as Referências</BreadcrumbPage> */}
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

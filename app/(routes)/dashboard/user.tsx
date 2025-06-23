@@ -70,13 +70,9 @@ export function User() {
             className="overflow-hidden rounded-full"
           >
             <Image
-              src={
-                user?.image ??
-                'https://assets.brasildefato.com.br/2024/09/image_processing20220512-20730-jb29gt.jpeg'
-              }
+              src={user?.image ?? 'https://i.ibb.co/twhxCjCs/images-1.jpg'}
               loader={() =>
-                user?.image ??
-                'https://assets.brasildefato.com.br/2024/09/image_processing20220512-20730-jb29gt.jpeg'
+                user?.image ?? 'https://i.ibb.co/twhxCjCs/images-1.jpg'
               }
               width="36"
               height="36"

@@ -37,7 +37,7 @@ const degreeLevels: IOption[] = [
 
 export default function ProfileEdit() {
   const [picUrl, setPicUrl] = useState<string | null>(null);
-  const [profilePic, setProfilePic] = useState<File | undefined>();
+  const [lattesXMLFile, setLattesXMLFile] = useState<File | undefined>();
   const [profileInfo, setProfileInfo] = useState<IProfile>({
     email: '',
     fullName: '',
@@ -80,7 +80,7 @@ export default function ProfileEdit() {
               className="w-48 h-48 object-contain rounded-full"
               src={
                 picUrl ??
-                'https://assets.brasildefato.com.br/2024/09/image_processing20220512-20730-jb29gt.jpeg'
+                'https://imagens.ebc.com.br/R8F5wltSMiUk-en-DOQ1YRJTpk4=/770x0/https://agenciabrasil.ebc.com.br/sites/default/files/thumbnails/image/2025/06/11/lula7176.jpg?itok=slQU2u5a'
               }
               alt={''}
               width="64"
@@ -88,20 +88,19 @@ export default function ProfileEdit() {
             />
 
             <span
-              className="bottom-0 cursor-pointer flex flex-row items-center justify-center left-36 absolute w-10 h-10 bg-black border-2 border-white dark:border-gray-800 rounded-full"
+              className="bottom-0 cursor-pointer flex flex-row items-center justify-center left-36 absolute w-10 h-10 bg-black border-2 border-white dark:border-gray-800 rounded-full text-white dark:text-black"
               onClick={() => {
-                document.getElementById('fileInput')?.click();
+                document.getElementById('profilePicInput')?.click();
               }}
             >
-              <Pen width={14} height={14} />
+              <Pen className="dark:text-white" width={14} height={14} />
 
               <input
                 accept="image/*"
                 className="hidden"
-                id="fileInput"
+                id="profilePicInput"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   if (e.target.files) {
-                    setProfilePic(e.target.files[0]);
                     setPicUrl(URL.createObjectURL(e.target.files[0]));
                   }
                 }}
@@ -136,7 +135,7 @@ export default function ProfileEdit() {
               }));
             }}
             required
-            value={profileInfo.email}
+            value={'fernando.haddad@mail.com'} //profileInfo.email}
           />
         </div>
       </div>
@@ -144,11 +143,14 @@ export default function ProfileEdit() {
       <div className="gap-3 grid grid-cols-[35%_65%]">
         <div>
           <CustomFileInput
-            inputText="Arquivo Lattes"
-            fileName={profilePic?.name}
+            accept="text/xml"
+            id="XMLFileInput"
+            inputText="Arquivo"
+            fileName={lattesXMLFile?.name}
             handleChange={(file: File) => {
-              setProfilePic(file);
+              setLattesXMLFile(file);
             }}
+            label="Lattes XML"
           />
         </div>
 
@@ -279,7 +281,7 @@ function DegreeFields({
         }}
       />
 
-      <div className="flex flex-row justify-between w-full">
+      <div className="flex flex-row gap-2 justify-between w-full">
         <CustomInput
           label={'Ano Início'}
           value={degree.startYear}

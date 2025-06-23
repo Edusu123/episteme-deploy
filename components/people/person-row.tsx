@@ -69,6 +69,14 @@ export function PersonRow({ person }: IProps) {
       <TableCell className="hidden md:table-cell">
         {person.createdAt?.toLocaleDateString('pt-br')}
       </TableCell>
+
+      <TableCell>
+        <ActionButton
+          itemId={person.id ?? ''}
+          accessLink={`/dashboard/research-environment/`}
+          deleteAction={() => {}}
+        />
+      </TableCell>
     </TableRow>
   );
 }

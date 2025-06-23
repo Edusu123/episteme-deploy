@@ -16,8 +16,8 @@ const mockEvents = [
   {
     id: 'event-1',
     title: 'Reunião de Alinhamento',
-    start: '2024-03-25T10:00:00',
-    end: '2024-03-25T11:00:00',
+    start: '2025-06-27T09:00:00',
+    end: '2025-06-27T12:00:00',
     color: '#4f46e5',
     type: 'event',
     description: 'Reunião semanal de alinhamento da equipe'
@@ -25,8 +25,8 @@ const mockEvents = [
   {
     id: 'event-2',
     title: 'Apresentação dos Resultados',
-    start: '2024-03-26T14:00:00',
-    end: '2024-03-26T15:30:00',
+    start: '2025-06-27T09:00:00',
+    end: '2025-06-27T12:00:00',
     color: '#059669',
     type: 'event',
     description: 'Apresentação dos resultados preliminares da pesquisa'
@@ -34,8 +34,8 @@ const mockEvents = [
   {
     id: 'event-3',
     title: 'Workshop de Metodologia',
-    start: '2024-03-27T09:00:00',
-    end: '2024-03-27T12:00:00',
+    start: '2025-06-27T09:00:00',
+    end: '2025-06-27T12:00:00',
     color: '#dc2626',
     type: 'event',
     description: 'Workshop sobre metodologias de pesquisa'
