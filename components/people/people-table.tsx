@@ -24,9 +24,16 @@ interface IProps {
   offset: number;
   total: number;
   peoplePerPage: number;
+  refetch: () => void;
 }
 
-export function PeopleTable({ people, offset, total, peoplePerPage }: IProps) {
+export function PeopleTable({
+  people,
+  offset,
+  total,
+  peoplePerPage,
+  refetch
+}: IProps) {
   let router = useRouter();
 
   function prevPage() {
@@ -69,47 +76,69 @@ export function PeopleTable({ people, offset, total, peoplePerPage }: IProps) {
           </TableHeader>
 
           <TableBody>
-            {people.map((p: IUser) => (
-              <PersonRow key={p.id} person={p} />
-            ))}
+            {people.length === 0 ? (
+              <TableRow>
+                <td
+                  colSpan={5}
+                  className="text-center py-8 text-muted-foreground"
+                >
+                  <div className="flex flex-col items-center space-y-2">
+                    <div className="text-lg font-medium">
+                      Nenhum dado encontrado
+                    </div>
+                    <div className="text-sm">
+                      Não há pessoas para exibir no momento.
+                    </div>
+                  </div>
+                </td>
+              </TableRow>
+            ) : (
+              people.map((p: IUser) => (
+                <PersonRow key={p.id} person={p} refetch={refetch} />
+              ))
+            )}
           </TableBody>
         </Table>
       </CardContent>
 
       <CardFooter className="flex flex-row justify-between">
-        <div className="text-xs text-muted-foreground">
-          <div className="text-xs text-muted-foreground">
-            Exibindo{' '}
-            <strong>
-              {Math.max(0, Math.min(offset - peoplePerPage, total) + 1)}-
-              {Math.min(offset, total)}
-            </strong>{' '}
-            de
-            <strong>{' ' + total}</strong> pessoas
-          </div>
-        </div>
-        <div className="flex">
-          <Button
-            onClick={prevPage}
-            variant="ghost"
-            size="sm"
-            type="submit"
-            disabled={offset === peoplePerPage}
-          >
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Anterior
-          </Button>
-          <Button
-            onClick={nextPage}
-            variant="ghost"
-            size="sm"
-            type="submit"
-            disabled={offset >= total}
-          >
-            Próxima
-            <ChevronRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
+        {people.length > 0 ? (
+          <>
+            <div className="text-xs text-muted-foreground">
+              <div className="text-xs text-muted-foreground">
+                Exibindo{' '}
+                <strong>
+                  {Math.max(0, Math.min(offset - peoplePerPage, total) + 1)}-
+                  {Math.min(offset, total)}
+                </strong>{' '}
+                de
+                <strong>{' ' + total}</strong> pessoas
+              </div>
+            </div>
+            <div className="flex">
+              <Button
+                onClick={prevPage}
+                variant="ghost"
+                size="sm"
+                type="submit"
+                disabled={offset === peoplePerPage}
+              >
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Anterior
+              </Button>
+              <Button
+                onClick={nextPage}
+                variant="ghost"
+                size="sm"
+                type="submit"
+                disabled={offset >= total}
+              >
+                Próxima
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </>
+        ) : null}
       </CardFooter>
     </Card>
   );

@@ -46,17 +46,13 @@ export function PersonActionButton({
         </DropdownMenuItem>
 
         <DropdownMenuItem>
-          <Button disabled={!isOwner} variant="destructive">
+          <Button
+            disabled={!isOwner}
+            variant="destructive"
+            onClick={() => deleteResearchPerson(researchId, personId)}
+          >
             Remover Usuário
           </Button>
-          {/* <button
-            className="text-red"
-            
-            onClick={() => deleteResearchPerson(personId, researchId)}
-            type="submit"
-          >
-            Arquivar
-          </button> */}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

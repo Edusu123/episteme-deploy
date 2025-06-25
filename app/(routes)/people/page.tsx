@@ -1,11 +1,13 @@
 'use client';
 
 import { PeopleTable } from '@/components/people/people-table';
-import { mockPeople } from 'app/api/seed/mocks';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { getPeople } from 'services/research';
 import { IResearch } from 'types/research';
 import { IUser } from 'types/user';
+import { useQuery } from '@tanstack/react-query';
+import { useCurrentUser } from '../../../hooks/useCurrentUser';
 
 const peoplePerPage = 5;
 
@@ -16,38 +18,56 @@ export default function page() {
 
   const offset = Number(searchParams.get('offset') ?? peoplePerPage);
 
-  const getAllPeople = async () => {
-    setPeople(
-      mockPeople.map(
-        (mock: any): IUser => ({
-          id: mock.id,
-          name: mock.name,
-          email: mock.email,
-          profilePic: mock.profilePic,
-          mutualResearches: mock.mutualResearches.map(
-            (mockResearch: any): IResearch => ({
-              researchId: mockResearch.id,
-              imageUrl: mockResearch.imageUrl,
-              title: mockResearch.title,
-              isOwner: mockResearch.isOwner
-            })
-          ),
-          createdAt: mock.createdAt
+  const { data: currentUser } = useCurrentUser();
+
+  const {
+    data: peopleData,
+    isFetching,
+    refetch
+  } = useQuery({
+    queryKey: ['researchesPeople'],
+    queryFn: getPeople
+  });
+
+  const formatPeopleData = async () => {
+    if (peopleData?.data?.researchesUsers) {
+      const formattedPeople = peopleData.data.researchesUsers.map(
+        (user: any): IUser => ({
+          id: user.userId,
+          name: user.name,
+          email: user.email,
+          profilePic: user.fileUrl,
+          mutualResearches:
+            user.mutualResearches?.map(
+              (research: any): IResearch => ({
+                researchId: research.researchId,
+                imageUrl: research.fileUrl,
+                title: research.title,
+                isOwner: research.ownerId === currentUser?.userId
+              })
+            ) || [],
+          createdAt: new Date(user.createdAt)
         })
-      )
-    );
+      );
+      setPeople(formattedPeople);
+    }
   };
 
   useEffect(() => {
-    getAllPeople();
-  }, []);
+    if (peopleData) {
+      formatPeopleData();
+    }
+  }, [peopleData]);
 
+  if (isFetching) return <div>Loading...</div>;
+  console.log({ total: people.length });
   return (
     <PeopleTable
       offset={offset}
       people={people.slice(offset - peoplePerPage, offset)}
       peoplePerPage={peoplePerPage}
       total={people.length}
+      refetch={refetch}
     />
   );
 }

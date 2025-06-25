@@ -52,13 +52,15 @@ interface IProps {
   name: string;
   email: string;
   callbackAction: () => void;
+  readOnly?: boolean;
 }
 
 export default function ProfileEdit({
   id,
   name,
   email,
-  callbackAction
+  callbackAction,
+  readOnly = false
 }: IProps) {
   const settingsModal = useProfileModal();
 
@@ -172,27 +174,29 @@ export default function ProfileEdit({
               )}
             </div>
 
-            <span
-              className="bottom-0 cursor-pointer flex flex-row items-center justify-center left-36 absolute w-10 h-10 bg-black border-2 border-white dark:border-gray-800 rounded-full text-white dark:text-black"
-              onClick={() => {
-                document.getElementById('profilePicInput')?.click();
-              }}
-            >
-              <Pen className="dark:text-white" width={14} height={14} />
-
-              <input
-                accept="image/*"
-                className="hidden"
-                id="profilePicInput"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  if (e.target.files) {
-                    setProfileImage(e.target.files[0]);
-                    setPicUrl(URL.createObjectURL(e.target.files[0]));
-                  }
+            {!readOnly && (
+              <span
+                className="bottom-0 cursor-pointer flex flex-row items-center justify-center left-36 absolute w-10 h-10 bg-black border-2 border-white dark:border-gray-800 rounded-full text-white dark:text-black"
+                onClick={() => {
+                  document.getElementById('profilePicInput')?.click();
                 }}
-                type="file"
-              />
-            </span>
+              >
+                <Pen className="dark:text-white" width={14} height={14} />
+
+                <input
+                  accept="image/*"
+                  className="hidden"
+                  id="profilePicInput"
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    if (e.target.files) {
+                      setProfileImage(e.target.files[0]);
+                      setPicUrl(URL.createObjectURL(e.target.files[0]));
+                    }
+                  }}
+                  type="file"
+                />
+              </span>
+            )}
           </div>
         </div>
 
@@ -207,13 +211,14 @@ export default function ProfileEdit({
               }));
             }}
             required
+            disabled={readOnly}
             value={profileInfo.name}
           />
 
           <CustomInput
             label={'E-mail'}
             name="email"
-            readOnly={true}
+            disabled={true}
             onChange={(e) => {
               setProfileInfo((prev: IUser) => ({
                 ...prev,
@@ -228,14 +233,16 @@ export default function ProfileEdit({
 
       <div className="gap-3 grid grid-cols-[35%_65%]">
         <div>
-          <CustomFileInput
-            inputText="Arquivo"
-            fileName={lattesXMLFile?.name}
-            handleChange={(file: File) => {
-              updateLattesFile(file);
-            }}
-            label="Lattes XML"
-          />
+          {!readOnly && (
+            <CustomFileInput
+              inputText="Arquivo"
+              fileName={lattesXMLFile?.name}
+              handleChange={(file: File) => {
+                updateLattesFile(file);
+              }}
+              label="Lattes XML"
+            />
+          )}
         </div>
 
         <div>
@@ -245,34 +252,37 @@ export default function ProfileEdit({
               key={index}
               profileInfo={profileInfo}
               setProfileInfo={setProfileInfo}
+              readOnly={readOnly}
             />
           ))}
         </div>
 
         <div></div>
 
-        <div className="flex flex-row justify-between p-2">
-          <Button
-            className="font-semibold text-base w-52"
-            onClick={addFormation}
-            variant="secondary"
-          >
-            <Plus height={24} width={24} />
-            Adicionar Formação
-          </Button>
+        {!readOnly && (
+          <div className="flex flex-row justify-between p-2">
+            <Button
+              className="font-semibold text-base w-52"
+              onClick={addFormation}
+              variant="secondary"
+            >
+              <Plus height={24} width={24} />
+              Adicionar Formação
+            </Button>
 
-          <Button
-            className="font-semibold text-base w-48"
-            onClick={() => saveInfo()}
-            variant="default"
-          >
-            {isLoading ? (
-              <CgSpinner size={20} className="animate-spin" />
-            ) : (
-              'Salvar'
-            )}
-          </Button>
-        </div>
+            <Button
+              className="font-semibold text-base w-48"
+              onClick={() => saveInfo()}
+              variant="default"
+            >
+              {isLoading ? (
+                <CgSpinner size={20} className="animate-spin" />
+              ) : (
+                'Salvar'
+              )}
+            </Button>
+          </div>
+        )}
       </div>
     </DialogContent>
   );
@@ -282,12 +292,14 @@ interface IDegreeFieldsProps {
   degree: IDegree;
   profileInfo: IUser;
   setProfileInfo: Dispatch<SetStateAction<IUser>>;
+  readOnly: boolean;
 }
 
 function DegreeFields({
   degree,
   profileInfo,
-  setProfileInfo
+  setProfileInfo,
+  readOnly
 }: IDegreeFieldsProps) {
   const removeFormation = (degree: IDegree) => {
     setProfileInfo((prev: IUser) => ({
@@ -299,12 +311,14 @@ function DegreeFields({
   return (
     <div className="border flex flex-col gap-2 m-2 p-4 rounded-lg">
       <div className="flex flex-row justify-end h-5">
-        <X
-          className="cursor-pointer h-4 w-4"
-          onClick={() => {
-            removeFormation(degree);
-          }}
-        />
+        {!readOnly && (
+          <X
+            className="cursor-pointer h-4 w-4"
+            onClick={() => {
+              removeFormation(degree);
+            }}
+          />
+        )}
       </div>
 
       <CustomSelect
@@ -332,11 +346,13 @@ function DegreeFields({
             })
           }));
         }}
+        disabled={readOnly}
       />
 
       <CustomInput
         label={'Curso'}
         value={degree.course}
+        readOnly={readOnly}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           setProfileInfo((prev: IUser) => ({
             ...prev,
@@ -350,6 +366,7 @@ function DegreeFields({
       <CustomInput
         label={'Instituição'}
         value={degree.institution}
+        readOnly={readOnly}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           setProfileInfo((prev: IUser) => ({
             ...prev,
@@ -363,6 +380,7 @@ function DegreeFields({
       <CustomInput
         label={'Tese'}
         value={degree.thesisName}
+        readOnly={readOnly}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           setProfileInfo((prev: IUser) => ({
             ...prev,
@@ -377,6 +395,7 @@ function DegreeFields({
         <CustomInput
           label={'Ano Início'}
           value={degree.startYear}
+          readOnly={readOnly}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             setProfileInfo((prev: IUser) => ({
               ...prev,
@@ -390,6 +409,7 @@ function DegreeFields({
         <CustomInput
           label={'Ano Término'}
           value={degree.endYear}
+          readOnly={readOnly}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             setProfileInfo((prev: IUser) => ({
               ...prev,

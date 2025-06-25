@@ -17,17 +17,26 @@ interface InputProps {
   required?: boolean;
   showImages?: boolean;
   value: IOption | undefined;
+  disabled?: boolean;
 }
 
 const CustomSelect = forwardRef<HTMLSelectElement, InputProps>(
   (
-    { label, onChange, options, required = false, showImages = false, value },
+    {
+      label,
+      onChange,
+      options,
+      required = false,
+      showImages = false,
+      value,
+      disabled = false
+    },
     ref
   ) => {
     if (!value) value = { id: '', name: 'Selecione...' };
 
     return (
-      <Listbox onChange={onChange} ref={ref} value={value}>
+      <Listbox onChange={onChange} ref={ref} value={value} disabled={disabled}>
         <label
           className={`block text-sm/6 font-medium text-gray-900 dark:text-gray-100`}
         >
@@ -36,7 +45,9 @@ const CustomSelect = forwardRef<HTMLSelectElement, InputProps>(
         </label>
 
         <div className="relative">
-          <ListboxButton className="border border-input grid h-10 w-full cursor-default grid-cols-1 rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:text-gray-100 dark:bg-background">
+          <ListboxButton
+            className={`border border-input grid h-10 w-full cursor-default grid-cols-1 rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:text-gray-100 dark:bg-background ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
             <span className="col-start-1 row-start-1 flex items-center gap-3 pr-6">
               {showImages && value && (
                 <img

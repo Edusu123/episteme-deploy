@@ -1,5 +1,6 @@
 import { IResearch } from 'types/research';
 import { api } from './base/api';
+import { toast } from 'sonner';
 
 export const createResearch = async (
   research: IResearch,
@@ -45,6 +46,29 @@ export const getResearches = async () => {
 
 export const acceptInvitation = async (token: string) => {
   const response = await api.post(`/researches/invite/${token}/accept`);
+
+  return response;
+};
+
+export const getPeople = async () => {
+  const response = await api.get('/researches/people');
+
+  return {
+    data: response.data,
+    status: response.status
+  };
+};
+
+export const deleteResearchPerson = async ({
+  researchId,
+  userId
+}: {
+  researchId: string;
+  userId: string;
+}) => {
+  const response = await api.delete(
+    `/researches/${researchId}/users/${userId}`
+  );
 
   return response;
 };

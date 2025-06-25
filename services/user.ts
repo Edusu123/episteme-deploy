@@ -1,7 +1,8 @@
 import { api } from './base/api';
 
+//TODO: Types API responses with zod
 export const me = async () => {
-  const response = api.get('/users/me');
+  const response = await api.get('/users/me');
 
   return response;
 };

@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { NextThemeProvider } from '@/components/providers/ThemeProvider';
 import { ToastProvider } from '@/components/providers/ToastProvider';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { ReactQueryProvider } from '@/components/providers/ReactQueryProvider';
 
 export const metadata = {
   title: 'episteme'
@@ -27,13 +28,15 @@ export default async function RootLayout({
         />
       </head>
       <body className="flex min-h-screen w-full flex-col">
-        <NextAuthProvider>
-          <NextThemeProvider>
-            <ToastProvider>
-              <TooltipProvider>{children}</TooltipProvider>
-            </ToastProvider>
-          </NextThemeProvider>
-        </NextAuthProvider>
+        <ReactQueryProvider>
+          <NextAuthProvider>
+            <NextThemeProvider>
+              <ToastProvider>
+                <TooltipProvider>{children}</TooltipProvider>
+              </ToastProvider>
+            </NextThemeProvider>
+          </NextAuthProvider>
+        </ReactQueryProvider>
       </body>
       <Analytics />
     </html>
