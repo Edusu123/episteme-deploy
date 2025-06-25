@@ -15,37 +15,20 @@ import { CustomFileInput } from '../ui/custom/custom-file-input';
 import { CustomSelect } from '../ui/custom/custom-select';
 import { IOption } from 'types';
 import { Button } from '../ui/button';
-import { IDegree } from 'types/degree';
+import { DegreeLevel, degreeLevels, IDegree } from 'types/degree';
 import { IUser } from 'types/user';
 import { importLattes } from 'services/file';
 import { AxiosResponse } from 'axios';
-import { updateName, updateProfileImage } from 'services/user';
+import {
+  getEducation,
+  setEducation,
+  updateName,
+  updateProfileImage
+} from 'services/user';
 import { toast } from 'sonner';
 import { CgSpinner } from 'react-icons/cg';
 import { useProfileModal } from 'hooks/modal';
-
-const degreeLevels: IOption[] = [
-  {
-    id: 'ENSINO_MEDIO',
-    name: 'Ensino Médio'
-  },
-  {
-    id: 'GRADUACAO',
-    name: 'Graduação'
-  },
-  {
-    id: 'ESPECIALIZACAO',
-    name: 'Especialização'
-  },
-  {
-    id: 'MESTRADO',
-    name: 'Mestrado'
-  },
-  {
-    id: 'DOUTORADO',
-    name: 'Doutorado'
-  }
-];
+import api from 'services/base/api';
 
 interface IProps {
   id: string;
@@ -74,6 +57,7 @@ export default function ProfileEdit({
     profilePic: '',
     formation: [
       {
+        id: undefined,
         degreeLevel: undefined,
         course: '',
         institution: '',
@@ -126,25 +110,37 @@ export default function ProfileEdit({
     setIsLoading(true);
 
     if (profileImage) {
-      const [updateImageResponse, updateNameResponse] = await Promise.all([
-        updateProfileImage(profileImage),
-        updateName(profileInfo.name)
-      ]);
+      const updateImageResponse = await updateProfileImage(profileImage);
 
-      if (
-        updateImageResponse.status !== 200 ||
-        updateNameResponse.status !== 200
-      ) {
+      if (updateImageResponse.status !== 200) {
         toast.error(
           'Ocorreu um erro com a sua solicitação. Por favor, tente novamente.'
         );
-      } else {
-        toast.success('Dados atualizados com sucesso!');
-        callbackAction();
-      }
 
-      setIsLoading(false);
+        setIsLoading(false);
+
+        return;
+      }
     }
+
+    const [updateNameResponse, setEducationResponse] = await Promise.all([
+      updateName(profileInfo.name),
+      setEducation(profileInfo.formation ?? [])
+    ]);
+
+    if (
+      updateNameResponse.status !== 200 ||
+      setEducationResponse.status !== 200
+    ) {
+      toast.error(
+        'Ocorreu um erro com a sua solicitação. Por favor, tente novamente.'
+      );
+    } else {
+      toast.success('Dados atualizados com sucesso!');
+      callbackAction();
+    }
+
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -156,6 +152,29 @@ export default function ProfileEdit({
       email: email
     }));
   }, [settingsModal.imageURL]);
+
+  useEffect(() => {
+    if (api.defaults.headers.Authorization)
+      getEducation().then((r: AxiosResponse) => {
+        if (r.status === 200)
+          setProfileInfo((prev: IUser) => ({
+            ...prev,
+            formation: r.data.map((item: any): IDegree => {
+              return {
+                id: item.educationId,
+                course: item.course,
+                institution: item.institution,
+                thesisName: item.thesisTitle,
+                degreeLevel: (degreeLevels.filter(
+                  (level: IOption) => level.name == item.level
+                )[0].id ?? '') as DegreeLevel,
+                endYear: item.graduationYear,
+                startYear: item.startYear
+              };
+            })
+          }));
+      });
+  }, [api.defaults.headers.Authorization]);
 
   return (
     <DialogContent className="w-full max-w-[40vw] max-h-[700px] overflow-auto">
