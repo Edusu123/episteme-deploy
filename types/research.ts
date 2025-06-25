@@ -1,4 +1,4 @@
-import { IUser } from './user';
+import { IUser, IUserInfo } from './user';
 
 export interface IResearch {
   researchId?: string;
@@ -10,4 +10,14 @@ export interface IResearch {
   usersList?: IUser[];
   createdAt?: Date;
   isOwner?: boolean;
+}
+
+export interface IResearchList {
+  researchId: string;
+  imageUrl: string;
+  title: string;
+  status: boolean;
+  description: string;
+  usersList: IUserInfo[];
+  createdAt: Date;
 }

@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
-import { IResearch } from 'types/research';
+import { IResearch, IResearchList } from 'types/research';
 import { TableCell, TableRow } from '../ui/table';
-import { IUser } from 'types/user';
+import { IUser, IUserInfo } from 'types/user';
 import {
   Tooltip,
   TooltipContent,
@@ -13,7 +13,7 @@ import {
 import { ActionButton } from '../ui/custom/action-button';
 
 interface IProps {
-  research: IResearch;
+  research: IResearchList;
   deleteAction: (id: string) => void;
 }
 
@@ -21,14 +21,16 @@ export function ResearchRow({ research, deleteAction }: IProps) {
   return (
     <TableRow>
       <TableCell className="hidden sm:table-cell">
-        <Image
-          alt="Research image"
-          className="aspect-square rounded-md object-cover"
-          height="64"
-          src={research.imageUrl ?? ''}
-          loader={() => research.imageUrl ?? ''}
-          width="64"
-        />
+        {research.imageUrl && (
+          <Image
+            alt="Research image"
+            className="aspect-square rounded-md object-cover"
+            height="64"
+            src={research.imageUrl ?? ''}
+            loader={() => research.imageUrl ?? ''}
+            width="64"
+          />
+        )}
       </TableCell>
 
       <TableCell className="font-medium">{research.title}</TableCell>
@@ -45,19 +47,21 @@ export function ResearchRow({ research, deleteAction }: IProps) {
 
       <TableCell className="hidden md:table-cell">
         <div className="flex -space-x-2 rtl:space-x-reverse">
-          {research?.usersList?.map((u: IUser) => {
+          {research?.usersList?.map((u: IUserInfo) => {
             return (
               <div className="hover:text-foreground" key={u.id}>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Image
-                      loader={() => u.profilePic ?? ''}
-                      className="cursor-pointer w-10 h-10 border-2 border-white object-contain rounded-full dark:border-gray-800"
-                      src={u.profilePic ?? ''}
-                      alt=""
-                      width="64"
-                      height="64"
-                    />
+                    {u.profilePic && (
+                      <Image
+                        loader={() => u.profilePic ?? ''}
+                        className="cursor-pointer w-10 h-10 border-2 border-white object-contain rounded-full dark:border-gray-800"
+                        src={u.profilePic ?? ''}
+                        alt=""
+                        width="64"
+                        height="64"
+                      />
+                    )}
                   </TooltipTrigger>
 
                   <TooltipContent side="left">{u.name}</TooltipContent>

@@ -1,4 +1,4 @@
-import { IResearch } from 'types/research';
+import { IResearch, IResearchList } from 'types/research';
 import {
   Card,
   CardContent,
@@ -22,7 +22,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 interface IProps {
   deleteAction: (id: string) => void;
   offset: number;
-  researches: IResearch[];
+  researches: IResearchList[];
   researchesPerPage: number;
   total: number;
 }
@@ -85,13 +85,31 @@ export function ResearchesTable({
           </TableHeader>
 
           <TableBody>
-            {researches.map((r: IResearch) => (
-              <ResearchRow
-                deleteAction={deleteAction}
-                key={r.researchId}
-                research={r}
-              />
-            ))}
+            {researches.length === 0 ? (
+              <TableRow>
+                <td
+                  colSpan={7}
+                  className="text-center py-8 text-muted-foreground"
+                >
+                  <div className="flex flex-col items-center space-y-2">
+                    <div className="text-lg font-medium">
+                      Nenhum dado encontrado
+                    </div>
+                    <div className="text-sm">
+                      Não há pessoas para exibir no momento.
+                    </div>
+                  </div>
+                </td>
+              </TableRow>
+            ) : (
+              researches.map((r: IResearchList) => (
+                <ResearchRow
+                  deleteAction={deleteAction}
+                  key={r.researchId}
+                  research={r}
+                />
+              ))
+            )}
           </TableBody>
         </Table>
       </CardContent>

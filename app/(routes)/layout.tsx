@@ -40,6 +40,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import api from 'services/base/api';
 import { useTheme } from 'next-themes';
+import { CardTitle } from '@/components/ui/card';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const session = useSession();
@@ -165,23 +166,26 @@ function MobileNav() {
 function DashboardBreadcrumb() {
   return (
     <Breadcrumb className="hidden md:flex">
-      <BreadcrumbList>
-        {/* <BreadcrumbItem>
+      <CardTitle className="text-mainblue text-xl dark:text-mainbeige">
+        Episteme
+      </CardTitle>
+      {/* <BreadcrumbList>
+        <BreadcrumbItem>
           <BreadcrumbLink asChild>
             <Link href="#">Dashboard</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator /> */}
+        <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
             <Link href="#">Tarefas</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        {/* <BreadcrumbSeparator /> */}
+        <BreadcrumbSeparator />
         <BreadcrumbItem>
-          {/* <BreadcrumbPage>Todas as Referências</BreadcrumbPage> */}
+          <BreadcrumbPage>Todas as Referências</BreadcrumbPage>
         </BreadcrumbItem>
-      </BreadcrumbList>
+      </BreadcrumbList> */}
     </Breadcrumb>
   );
 }

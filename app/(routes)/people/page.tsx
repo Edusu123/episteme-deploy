@@ -60,7 +60,6 @@ export default function page() {
   }, [peopleData]);
 
   if (isFetching) return <div>Loading...</div>;
-  console.log({ total: people.length });
   return (
     <PeopleTable
       offset={offset}
