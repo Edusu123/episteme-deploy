@@ -38,21 +38,13 @@ export const researchProfilePic = async (researchId: string, image: File) => {
 };
 
 export const getResearches = async () => {
-  if (api.defaults.headers.Authorization) {
-    const response = await api.get('/researches');
+  const response = await api.get('/researches');
 
-    return response;
-  }
-
-  return null;
+  return response;
 };
 
 export const acceptInvitation = async (token: string) => {
-  if (api.defaults.headers.Authorization) {
-    const response = await api.post(`/researches/invite/${token}/accept`);
+  const response = await api.post(`/researches/invite/${token}/accept`);
 
-    return response;
-  }
-
-  return null;
+  return response;
 };

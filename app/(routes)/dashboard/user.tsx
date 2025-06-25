@@ -14,13 +14,14 @@ import {
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Route } from 'next';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useProfileModal } from 'hooks/modal';
-import { Pen } from 'lucide-react';
-import { CustomInput } from '@/components/ui/custom/custom-input';
 import ProfileEdit from '@/components/modal/profile-edit';
+import api from 'services/base/api';
+import { me } from 'services/user';
+import { AxiosResponse } from 'axios';
 
 export function User() {
   const router = useRouter();
@@ -28,6 +29,11 @@ export function User() {
 
   const { data: session } = useSession();
   const user = session?.user;
+
+  const [id, setId] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [profileImageURL, setProfileImageURL] = useState<string>('');
 
   const logout = useCallback(() => {
     const accessToken = session?.user?.accessToken || undefined;
@@ -37,14 +43,8 @@ export function User() {
       body: JSON.stringify({ accessToken })
     })
       .then((res) => res.json())
-      .then((data) => {
-        // send log to the Sentry if the endpoint fails
-        // if (!data.success)
-        //     notifySentry("Could not log out!")
-      })
-      .catch((error) => {
-        //send log to the Sentry if an error occurs notifySentry(error)
-      })
+      .then((data) => {})
+      .catch((error) => {})
       .finally(async () => {
         signOut({ redirect: false }).then(() => {
           router.push(`${window.location.origin}/login` as Route<string>);
@@ -53,12 +53,28 @@ export function User() {
   }, [router, session]);
 
   useEffect(() => {
-    if (session?.error === 'RefreshAccessTokenError') {
-      // remember that error?
-      // force the user to log out if the session has RefreshAccessTokenError
-      logout();
-    }
+    if (session?.error === 'RefreshAccessTokenError') logout();
   }, [session, logout]);
+
+  useEffect(() => {
+    if (api.defaults.headers.Authorization) {
+      me().then((r: AxiosResponse) => {
+        setId(r.data.id);
+        setName(r.data.name);
+        setEmail(r.data.email);
+        setProfileImageURL(r.data.fileUrl);
+        settingsModal.setModal(false, r.data.fileUrl);
+      });
+    }
+  }, [api.defaults.headers.Authorization]);
+
+  const callback = async () => {
+    if (api.defaults.headers.Authorization)
+      me().then((r: AxiosResponse) => {
+        setProfileImageURL(r.data.fileUrl);
+        settingsModal.setModal(false, r.data.fileUrl);
+      });
+  };
 
   return (
     <div>
@@ -69,18 +85,20 @@ export function User() {
             size="icon"
             className="overflow-hidden rounded-full"
           >
-            <Image
-              src={user?.image ?? 'https://i.ibb.co/twhxCjCs/images-1.jpg'}
-              loader={() =>
-                user?.image ?? 'https://i.ibb.co/twhxCjCs/images-1.jpg'
-              }
-              width="36"
-              height="36"
-              alt="Avatar"
-              className="overflow-hidden rounded-full"
-              style={{ width: 'auto', height: 'auto' }}
-              unoptimized={true}
-            />
+            {profileImageURL == '' ? (
+              <></>
+            ) : (
+              <img
+                key={profileImageURL}
+                src={`${profileImageURL}?${Date.now()}`}
+                width="36"
+                height="36"
+                alt="Avatar"
+                className="overflow-hidden rounded-full"
+                style={{ width: 'auto', height: 'auto' }}
+                // unoptimized={true}
+              />
+            )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -88,7 +106,7 @@ export function User() {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="cursor-pointer"
-            onClick={() => settingsModal.setModal(true)}
+            onClick={() => settingsModal.setModal(true, profileImageURL ?? '')}
           >
             Perfil
           </DropdownMenuItem>
@@ -108,8 +126,18 @@ export function User() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Dialog open={settingsModal.isOpen} onOpenChange={settingsModal.setModal}>
-        <ProfileEdit />
+      <Dialog
+        open={settingsModal.isOpen}
+        onOpenChange={(open: boolean) => {
+          settingsModal.setModal(open, profileImageURL ?? '');
+        }}
+      >
+        <ProfileEdit
+          id={id}
+          name={name}
+          email={email}
+          callbackAction={callback}
+        />
       </Dialog>
     </div>
   );

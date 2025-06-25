@@ -12,6 +12,7 @@ import { AxiosResponse } from 'axios';
 import { useSession } from 'next-auth/react';
 import { ResearchesTable } from '@/components/researches/researches-table';
 import { researchEnvironments } from 'app/api/seed/mocks';
+import api from 'services/base/api';
 
 const researchesPerPage = 5;
 
@@ -45,7 +46,7 @@ export default function ProductsPage() {
   };
 
   useEffect(() => {
-    if (session.status == 'authenticated') getAllResearches();
+    if (api.defaults.headers.Authorization) getAllResearches();
   }, [session]);
 
   useEffect(() => {

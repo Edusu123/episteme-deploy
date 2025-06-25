@@ -2,15 +2,27 @@
 
 import Image from 'next/image';
 import { DialogContent } from '../ui/dialog';
-import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState
+} from 'react';
 import { Pen, Plus, X } from 'lucide-react';
 import { CustomInput } from '../ui/custom/custom-input';
 import { CustomFileInput } from '../ui/custom/custom-file-input';
 import { CustomSelect } from '../ui/custom/custom-select';
 import { IOption } from 'types';
-import { IProfile } from 'types/profile';
 import { Button } from '../ui/button';
 import { IDegree } from 'types/degree';
+import { IUser } from 'types/user';
+import { importLattes } from 'services/file';
+import { AxiosResponse } from 'axios';
+import { updateName, updateProfileImage } from 'services/user';
+import { toast } from 'sonner';
+import { CgSpinner } from 'react-icons/cg';
+import { useProfileModal } from 'hooks/modal';
 
 const degreeLevels: IOption[] = [
   {
@@ -35,12 +47,28 @@ const degreeLevels: IOption[] = [
   }
 ];
 
-export default function ProfileEdit() {
-  const [picUrl, setPicUrl] = useState<string | null>(null);
+interface IProps {
+  id: string;
+  name: string;
+  email: string;
+  callbackAction: () => void;
+}
+
+export default function ProfileEdit({
+  id,
+  name,
+  email,
+  callbackAction
+}: IProps) {
+  const settingsModal = useProfileModal();
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [lattesXMLFile, setLattesXMLFile] = useState<File | undefined>();
-  const [profileInfo, setProfileInfo] = useState<IProfile>({
+  const [picUrl, setPicUrl] = useState<string | undefined>();
+  const [profileInfo, setProfileInfo] = useState<IUser>({
+    id: '',
+    name: '',
     email: '',
-    fullName: '',
     profilePic: '',
     formation: [
       {
@@ -53,12 +81,13 @@ export default function ProfileEdit() {
       }
     ]
   });
+  const [profileImage, setProfileImage] = useState<File | undefined>();
 
   const addFormation = () => {
-    setProfileInfo((prev: IProfile) => ({
+    setProfileInfo((prev: IUser) => ({
       ...prev,
       formation: [
-        ...profileInfo.formation,
+        ...(profileInfo.formation ?? []),
         {
           degreeLevel: undefined,
           course: '',
@@ -71,21 +100,77 @@ export default function ProfileEdit() {
     }));
   };
 
+  const updateLattesFile = (file: File) => {
+    setLattesXMLFile(file);
+
+    importLattes(file).then((r: AxiosResponse) => {
+      setProfileInfo((prev: IUser) => ({
+        ...prev,
+        formation: r.data.educations.educations.map(
+          (item: any): IDegree => ({
+            degreeLevel: item.nivel,
+            course: item.curso,
+            institution: item.instituicao,
+            thesisName: item.tituloTeste ?? '',
+            startYear: item.anoInicio,
+            endYear: item.anoFormacao
+          })
+        )
+      }));
+    });
+  };
+
+  const saveInfo = async () => {
+    setIsLoading(true);
+
+    if (profileImage) {
+      const [updateImageResponse, updateNameResponse] = await Promise.all([
+        updateProfileImage(profileImage),
+        updateName(profileInfo.name)
+      ]);
+
+      if (
+        updateImageResponse.status !== 200 ||
+        updateNameResponse.status !== 200
+      ) {
+        toast.error(
+          'Ocorreu um erro com a sua solicitação. Por favor, tente novamente.'
+        );
+      } else {
+        toast.success('Dados atualizados com sucesso!');
+        callbackAction();
+      }
+
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setPicUrl(settingsModal.imageURL);
+    setProfileInfo((prev: IUser) => ({
+      ...prev,
+      name: name,
+      id: id,
+      email: email
+    }));
+  }, [settingsModal.imageURL]);
+
   return (
     <DialogContent className="w-full max-w-[40vw] max-h-[700px] overflow-auto">
       <div className="gap-3 grid grid-cols-[35%_65%]">
         <div className="flex flex-row justify-center w-full">
           <div className="relative w-auto">
-            <Image
-              className="w-48 h-48 object-contain rounded-full"
-              src={
-                picUrl ??
-                'https://imagens.ebc.com.br/R8F5wltSMiUk-en-DOQ1YRJTpk4=/770x0/https://agenciabrasil.ebc.com.br/sites/default/files/thumbnails/image/2025/06/11/lula7176.jpg?itok=slQU2u5a'
-              }
-              alt={''}
-              width="64"
-              height="64"
-            />
+            <div className="w-48 h-48">
+              {picUrl && (
+                <Image
+                  className="h-full object-contain rounded-full w-full"
+                  src={picUrl}
+                  alt={''}
+                  width="64"
+                  height="64"
+                />
+              )}
+            </div>
 
             <span
               className="bottom-0 cursor-pointer flex flex-row items-center justify-center left-36 absolute w-10 h-10 bg-black border-2 border-white dark:border-gray-800 rounded-full text-white dark:text-black"
@@ -101,6 +186,7 @@ export default function ProfileEdit() {
                 id="profilePicInput"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   if (e.target.files) {
+                    setProfileImage(e.target.files[0]);
                     setPicUrl(URL.createObjectURL(e.target.files[0]));
                   }
                 }}
@@ -115,13 +201,13 @@ export default function ProfileEdit() {
             label={'Nome'}
             name="name"
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              setProfileInfo((prev: IProfile) => ({
+              setProfileInfo((prev: IUser) => ({
                 ...prev,
-                fullName: e.target.value
+                name: e.target.value
               }));
             }}
             required
-            value={profileInfo.fullName}
+            value={profileInfo.name}
           />
 
           <CustomInput
@@ -129,13 +215,13 @@ export default function ProfileEdit() {
             name="email"
             readOnly={true}
             onChange={(e) => {
-              setProfileInfo((prev: IProfile) => ({
+              setProfileInfo((prev: IUser) => ({
                 ...prev,
                 email: e.target.value
               }));
             }}
             required
-            value={'fernando.haddad@mail.com'} //profileInfo.email}
+            value={profileInfo.email}
           />
         </div>
       </div>
@@ -143,12 +229,10 @@ export default function ProfileEdit() {
       <div className="gap-3 grid grid-cols-[35%_65%]">
         <div>
           <CustomFileInput
-            accept="text/xml"
-            id="XMLFileInput"
             inputText="Arquivo"
             fileName={lattesXMLFile?.name}
             handleChange={(file: File) => {
-              setLattesXMLFile(file);
+              updateLattesFile(file);
             }}
             label="Lattes XML"
           />
@@ -177,8 +261,16 @@ export default function ProfileEdit() {
             Adicionar Formação
           </Button>
 
-          <Button className="font-semibold text-base w-48" variant="default">
-            Salvar
+          <Button
+            className="font-semibold text-base w-48"
+            onClick={() => saveInfo()}
+            variant="default"
+          >
+            {isLoading ? (
+              <CgSpinner size={20} className="animate-spin" />
+            ) : (
+              'Salvar'
+            )}
           </Button>
         </div>
       </div>
@@ -188,8 +280,8 @@ export default function ProfileEdit() {
 
 interface IDegreeFieldsProps {
   degree: IDegree;
-  profileInfo: IProfile;
-  setProfileInfo: Dispatch<SetStateAction<IProfile>>;
+  profileInfo: IUser;
+  setProfileInfo: Dispatch<SetStateAction<IUser>>;
 }
 
 function DegreeFields({
@@ -198,9 +290,9 @@ function DegreeFields({
   setProfileInfo
 }: IDegreeFieldsProps) {
   const removeFormation = (degree: IDegree) => {
-    setProfileInfo((prev: IProfile) => ({
+    setProfileInfo((prev: IUser) => ({
       ...prev,
-      formation: profileInfo.formation.filter((d: IDegree) => d != degree)
+      formation: profileInfo?.formation?.filter((d: IDegree) => d != degree)
     }));
   };
 
@@ -222,7 +314,7 @@ function DegreeFields({
           degreeLevels.filter((o: IOption) => o.id == degree.degreeLevel)[0]
         }
         onChange={(option: IOption) => {
-          setProfileInfo((prev: IProfile) => ({
+          setProfileInfo((prev: IUser) => ({
             ...prev,
             formation: profileInfo.formation?.map((d: IDegree) => {
               if (
@@ -246,7 +338,7 @@ function DegreeFields({
         label={'Curso'}
         value={degree.course}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
-          setProfileInfo((prev: IProfile) => ({
+          setProfileInfo((prev: IUser) => ({
             ...prev,
             formation: profileInfo.formation?.map((d: IDegree) =>
               d == degree ? { ...d, course: e.target.value } : d
@@ -259,7 +351,7 @@ function DegreeFields({
         label={'Instituição'}
         value={degree.institution}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
-          setProfileInfo((prev: IProfile) => ({
+          setProfileInfo((prev: IUser) => ({
             ...prev,
             formation: profileInfo.formation?.map((d: IDegree) =>
               d == degree ? { ...d, institution: e.target.value } : d
@@ -272,7 +364,7 @@ function DegreeFields({
         label={'Tese'}
         value={degree.thesisName}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
-          setProfileInfo((prev: IProfile) => ({
+          setProfileInfo((prev: IUser) => ({
             ...prev,
             formation: profileInfo.formation?.map((d: IDegree) =>
               d == degree ? { ...d, thesisName: e.target.value } : d
@@ -286,7 +378,7 @@ function DegreeFields({
           label={'Ano Início'}
           value={degree.startYear}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            setProfileInfo((prev: IProfile) => ({
+            setProfileInfo((prev: IUser) => ({
               ...prev,
               formation: profileInfo.formation?.map((d: IDegree) =>
                 d == degree ? { ...d, startYear: e.target.value } : d
@@ -299,7 +391,7 @@ function DegreeFields({
           label={'Ano Término'}
           value={degree.endYear}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            setProfileInfo((prev: IProfile) => ({
+            setProfileInfo((prev: IUser) => ({
               ...prev,
               formation: profileInfo.formation?.map((d: IDegree) =>
                 d == degree ? { ...d, endYear: e.target.value } : d

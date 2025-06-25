@@ -112,6 +112,7 @@ export const config = {
           token.userId = decodedAccessToken.userId;
           token.accessTokenExpires = decodedAccessToken['exp'] * 1000;
           token.email = decodedAccessToken.email;
+          token.name = decodedAccessToken.name;
         }
       }
 

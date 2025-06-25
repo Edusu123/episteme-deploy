@@ -5,7 +5,11 @@ export const importLattes = async (file: File) => {
 
   bodyFormData.append('file', file);
 
-  const response = await api.post('/files/import-lattes', bodyFormData);
+  const response = await api.post('/files/import-lattes', bodyFormData, {
+    headers: {
+      'Content-Type': 'multipart/form-data;'
+    }
+  });
 
   return response;
 };

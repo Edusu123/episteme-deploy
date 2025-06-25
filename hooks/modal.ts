@@ -5,7 +5,15 @@ type ModalStore = {
   setModal: (open: boolean) => void;
 };
 
-export const useProfileModal = create<ModalStore>((set) => ({
+type ProfileModalStore = {
+  isOpen: boolean;
+  imageURL: string;
+  setModal: (open: boolean, imageURL: string) => void;
+};
+
+export const useProfileModal = create<ProfileModalStore>((set) => ({
   isOpen: false,
-  setModal: (open: boolean) => set(() => ({ isOpen: open }))
+  imageURL: '',
+  setModal: (open: boolean, imageURL: string) =>
+    set(() => ({ isOpen: open, imageURL: imageURL }))
 }));

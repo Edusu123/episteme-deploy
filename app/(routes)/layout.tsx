@@ -45,8 +45,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const session = useSession();
 
   useEffect(() => {
-    if (session.data?.user.accessToken)
+    if (session.status === 'authenticated') {
       api.defaults.headers.Authorization = `Bearer ${session.data?.user.accessToken}`;
+    }
   }, [session]);
 
   return (
