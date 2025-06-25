@@ -1,6 +1,6 @@
 import { IResearch } from 'types/research';
 import { api } from './base/api';
-import { toast } from 'sonner';
+import { z } from 'zod';
 
 export const createResearch = async (
   research: IResearch,
@@ -69,6 +69,30 @@ export const deleteResearchPerson = async ({
   const response = await api.delete(
     `/researches/${researchId}/users/${userId}`
   );
+
+  return response;
+};
+
+
+
+export const researchPutTaskBody = z.object({
+  taskId: z.string().uuid().optional(),
+  title: z.string(),
+  description: z.string(),
+  assignedTo: z.string().uuid().optional(),
+  dueDate: z.coerce.date().optional(),
+  boardId: z.string().uuid().optional(),
+  boardColumnId: z.string().uuid().optional()
+});
+export type TaskEditBody = z.infer<typeof researchPutTaskBody>;
+export const updateResearchTask = async ({
+  task,
+  researchId
+}: {
+  task: TaskEditBody;
+  researchId: string;
+}) => {
+  const response = await api.put(`/researches/${researchId}/tasks`, task);
 
   return response;
 };

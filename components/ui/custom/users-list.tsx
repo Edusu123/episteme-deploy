@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 import Image from 'next/image';
 
 interface ProfileInfo {
+  userId: string;
   profilePic: string;
   name: string;
 }
@@ -17,7 +18,7 @@ export default function UsersList({ usersList }: IProps) {
     <div className="flex -space-x-2 rtl:space-x-reverse">
       {usersList.map((x: ProfileInfo) => {
         return (
-          <div className="hover:text-foreground" key={x.name}>
+          <div className="hover:text-foreground" key={x.userId}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Image

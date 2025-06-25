@@ -29,6 +29,13 @@ export const updateName = async (name: string) => {
   return response;
 };
 
+
+export const getSelfTasks = async () => {
+  const response = await api.get('/users/me/tasks');
+
+  return response;
+};
+
 export const getEducation = async () => {
   const response = await api.get('/users/me/educations');
   return response;

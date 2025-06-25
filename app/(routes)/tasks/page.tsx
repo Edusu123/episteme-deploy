@@ -12,10 +12,15 @@ import {
 } from '@dnd-kit/core';
 import { KanbanColumn } from '../dashboard/research-environment/[id]/components/kanban-column';
 import { KanbanItem } from '../dashboard/research-environment/[id]/components/kanban-item';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { arrayMove } from '@dnd-kit/sortable';
 import { researchEnvironments } from 'app/api/seed/mocks';
 import UsersList from '@/components/ui/custom/users-list';
+import { getSelfTasks } from 'services/user';
+import { useQuery } from '@tanstack/react-query';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TasksTable } from '@/components/tasks/tasks-table';
+import { ITasks } from 'types/task';
 
 const mockTasks = {
   todo: [
@@ -54,173 +59,105 @@ const mockTasks = {
   ]
 };
 
-export type Task = {
-  id: number;
-  title: string;
-  description: string;
-  assignee: string;
-  dueDate: string;
-};
-
-type Tasks = {
-  todo: Task[];
-  inProgress: Task[];
-  done: Task[];
-};
-
-type ColumnId = keyof Tasks;
-
+//TODO: Get tasks from API
+//TODO: Add task editing
 export default function page() {
-  const [tasks, setTasks] = useState<Tasks>(mockTasks);
-  const [activeId, setActiveId] = useState<number | null>(null);
-  const [activeColumn, setActiveColumn] = useState<ColumnId | null>(null);
-  const [nextTaskId, setNextTaskId] = useState(
-    Math.max(
-      ...Object.values(mockTasks).flatMap((tasks) =>
-        tasks.map((task) => task.id)
-      ),
-      0
-    ) + 1
-  );
+  const {
+    data: userTasks,
+    error,
+    refetch
+  } = useQuery({
+    queryKey: ['userTasks'],
+    queryFn: getSelfTasks
+  });
 
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 10
-      }
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 250,
-        tolerance: 5
-      }
-    })
-  );
+  console.log({ error, userTasks });
 
-  function handleDragStart(event: DragStartEvent) {
-    const { active } = event;
-    setActiveId(active.id as number);
-    setActiveColumn(active.data.current?.columnId as ColumnId);
-  }
+  const [formattedTasks, setFormattedTasks] = useState<ITasks[]>([]);
+  const [researchEnvironments, setResearchEnvironments] = useState<
+    Map<string, any>
+  >(new Map());
 
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-
-    if (!over) return;
-
-    const activeColumn = active.data.current?.columnId as ColumnId;
-    const overColumn = over.data.current?.columnId as ColumnId;
-
-    if (!activeColumn || !overColumn) return;
-
-    if (activeColumn === overColumn) {
-      // Reorder within the same column
-      const oldIndex = tasks[activeColumn].findIndex(
-        (task) => task.id === active.id
-      );
-      const newIndex = tasks[activeColumn].findIndex(
-        (task) => task.id === over.id
+  useEffect(() => {
+    if (userTasks) {
+      console.log({ userTasks });
+      setFormattedTasks(
+        userTasks.data.map((task: any) => ({
+          taskId: task.taskId,
+          title: task.title,
+          description: task.description,
+          assignedTo: task.assignedTo,
+          dueDate: task.dueDate,
+          research: task.research
+        }))
       );
 
-      if (oldIndex !== -1 && newIndex !== -1) {
-        setTasks((prev) => ({
-          ...prev,
-          [activeColumn]: arrayMove(prev[activeColumn], oldIndex, newIndex)
-        }));
-      }
-    } else {
-      // Move to a different column
-      const task = tasks[activeColumn].find((task) => task.id === active.id);
-      if (!task) return;
-
-      setTasks((prev) => ({
-        ...prev,
-        [activeColumn]: prev[activeColumn].filter((t) => t.id !== active.id),
-        [overColumn]: [...prev[overColumn], task]
-      }));
+      setResearchEnvironments(
+        new Map(userTasks.data.map((env: any) => [env.researchId, env.research]))
+      );
     }
-
-    setActiveId(null);
-    setActiveColumn(null);
-  }
-
-  function handleCreateTask(columnId: ColumnId, taskData: Omit<Task, 'id'>) {
-    const newTask: Task = {
-      ...taskData,
-      id: nextTaskId
-    };
-
-    setTasks((prev) => ({
-      ...prev,
-      [columnId]: [...prev[columnId], newTask]
-    }));
-
-    setNextTaskId((prev) => prev + 1);
-  }
-
-  const columns: { id: ColumnId; title: string }[] = [
-    { id: 'todo', title: 'A Fazer' },
-    { id: 'inProgress', title: 'Em Progresso' },
-    { id: 'done', title: 'Concluído' }
-  ];
+  }, [userTasks]);
 
   return (
-    <div>
-      <DndContext
-        sensors={sensors}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <div className="flex gap-4">
-          {columns.map((column) => (
-            <KanbanColumn
-              key={column.id}
-              id={column.id}
-              title={column.title}
-              tasks={tasks[column.id]}
-            />
-          ))}
+    <Tabs defaultValue="all">
+      <div className="flex items-center mt-2">
+        <TabsList>
+          <TabsTrigger value="all">Todos</TabsTrigger>
+          <TabsTrigger value="active">Ativos</TabsTrigger>
+          <TabsTrigger value="archived" className="hidden sm:flex">
+            Arquivados
+          </TabsTrigger>
+        </TabsList>
+        <div className="ml-auto flex items-center gap-2">
+          {/* <Button size="sm" variant="outline" className="h-8 gap-1">
+            <File className="h-3.5 w-3.5" />
+            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
+          </Button> */}
         </div>
-
-        <DragOverlay>
-          {activeId && activeColumn && tasks[activeColumn] ? (
-            <KanbanItem
-              task={tasks[activeColumn].find((task) => task.id === activeId)!}
-              columnId={activeColumn}
-              isDragging
-            />
-          ) : null}
-        </DragOverlay>
-      </DndContext>
-      <div className="grid grid-cols-3 justify-items-center mt-5">
-        {researchEnvironments.map((env: any) => (
-          <a
-            className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-            href="#"
-            key={env.researchId}
-          >
-            <img
-              className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
-              src={env.imageUrl}
-              alt=""
-            />
-            <div className="flex flex-col justify-between p-4 leading-normal">
-              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {env.title}
-              </h5>
-              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                {env.description}
-              </p>
-              <UsersList
-                usersList={env.usersList.map((p: any) => ({
-                  name: p.name,
-                  profilePic: p.profilePic
-                }))}
-              />
-            </div>
-          </a>
-        ))}
       </div>
-    </div>
+      <TabsContent value="all">
+        <TasksTable
+          tasks={formattedTasks}
+          offset={0}
+          total={formattedTasks?.length}
+          perPage={10}
+          refetch={refetch}
+        />
+
+        <div className="grid grid-cols-3 justify-items-center mt-5">
+          {Array.from(researchEnvironments.values()).map((env: any, index: number) => {
+            return (
+              <a
+                className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                href={`/dashboard/research-environment/${env?.researchId}`}
+                key={index}
+              >
+                <img
+                  className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
+                  src={env?.fileUrl ?? '/default-image.svg'}
+                  alt=""
+                />
+                <div className="flex flex-col justify-between p-4 leading-normal">
+                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    {env?.title}
+                  </h5>
+                  <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                    {env?.description}
+                  </p>
+                  <UsersList
+                    usersList={env?.users?.map((p: any) => ({
+                      userId: p.userId,
+                      name: p.name,
+                      profilePic:
+                        p?.fileUrl ?? 'https://ui.shadcn.com/placeholder.svg'
+                    }))}
+                  />
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </TabsContent>
+    </Tabs>
   );
 }
