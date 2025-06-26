@@ -52,20 +52,20 @@ export default function DesktopNav() {
         <NavItem href="/references" label="Bibliografia e Referências">
           <BookCopy className="h-5 w-5" />
         </NavItem>
-
+{/* 
         <NavItem href="/calendar" label="Calendário e Cronogramas">
           <Calendar className="h-5 w-5" />
-        </NavItem>
+        </NavItem> */}
 
         <NavItem href="/tasks" label="Atividades">
           <CheckCheck className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Notificações">
+        {/* <NavItem href="#" label="Notificações">
           <Bell className="h-5 w-5" />
-        </NavItem>
+        </NavItem> */}
       </nav>
-      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+      {/* <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
@@ -78,7 +78,7 @@ export default function DesktopNav() {
           </TooltipTrigger>
           <TooltipContent side="right">Settings</TooltipContent>
         </Tooltip>
-      </nav>
+      </nav> */}
     </aside>
   );
 }

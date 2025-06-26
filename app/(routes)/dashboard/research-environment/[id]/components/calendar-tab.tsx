@@ -71,10 +71,10 @@ export function CalendarTab({ tasks }: CalendarTabProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Calendário</CardTitle>
-          <Button>
+          {/* <Button>
             <Plus className="mr-2 h-4 w-4" />
             Novo Evento
-          </Button>
+          </Button> */}
         </div>
       </CardHeader>
       <CardContent>

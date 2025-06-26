@@ -111,7 +111,7 @@ export default function LoginPage() {
           <CustomButton isLoading={loading} text={'Entrar'} type="submit" />
 
           <div>
-            <button className="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            {/* <button className="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
               <svg
                 className="w-5 h-5 mr-2"
                 viewBox="0 0 21 20"
@@ -148,7 +148,7 @@ export default function LoginPage() {
                 </defs>
               </svg>
               <div>Entrar com Google</div>
-            </button>
+            </button> */}
           </div>
           <p className="mt-10 text-center text-sm/6 text-gray-500">
             Não possui uma conta?{' '}

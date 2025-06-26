@@ -111,6 +111,7 @@ export default function RegisterResearchEnvironment() {
 
               <CustomFileInput
                 fileName={profilePic?.name}
+                label={'Imagem do ambiente'}
                 handleChange={(file: File) => {
                   setProfilePic(file);
                 }}
