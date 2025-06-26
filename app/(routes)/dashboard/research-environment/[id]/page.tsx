@@ -2,24 +2,61 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsTrigger, TabsList, TabsContent } from '@/components/ui/tabs';
-import { KanbanBoard } from './components/kanban-board';
+import { KanbanBoard, Task } from './components/kanban-board';
 import { DocumentsTab } from './components/documents-tab';
 import { useResearchEnvironment } from 'hooks/useResearchEnvironment';
-import { use, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { IFileList } from 'types/file';
 import { ResearchMembersTab } from './components/research-members-tab';
+import { CalendarTab } from './components/calendar-tab';
+import { useSession } from 'next-auth/react';
+import { getTasks } from 'services/task';
+import { AxiosResponse } from 'axios';
+import api from 'services/base/api';
 
 export default function ResearchEnvironment({
   params
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const session = useSession();
   const { id } = use(params);
   const {
     data: researchEnvironment,
     isLoading,
     error
   } = useResearchEnvironment({ researchId: id });
+
+  const [taskList, setTaskList] = useState<Task[]>([]);
+
+  const getAllTasks = async () => {
+    getTasks(id).then((r: AxiosResponse) => {
+      console.log('r');
+      console.log(r);
+      setTaskList(
+        r.data.tasks.map(
+          (item: any): Task => ({
+            taskId: item.taskId,
+            researchId: item.researchId,
+            boardId: item.boardId,
+            boardColumnId: item.boardColumnId,
+            title: item.title,
+            description: item.description,
+            assignedTo: item.assignedTo,
+            dueDate: item.dueDate,
+            createdBy: item.createdBy,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt
+          })
+        )
+      );
+    });
+  };
+
+  useEffect(() => {
+    if (api.defaults.headers.Authorization) getAllTasks();
+  }, [session]);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -67,12 +104,14 @@ export default function ResearchEnvironment({
         </TabsContent>
 
         <TabsContent value="calendar">
-          {/* TODO: Fetch tasks and events */}
-          {/* <CalendarTab tasks={mockTasks} /> */}
+          <CalendarTab tasks={taskList} />
         </TabsContent>
 
         <TabsContent value="people">
-          <ResearchMembersTab researchId={id} researchData={researchEnvironment?.data?.research} />
+          <ResearchMembersTab
+            researchId={id}
+            researchData={researchEnvironment?.data?.research}
+          />
         </TabsContent>
       </Tabs>
     </div>

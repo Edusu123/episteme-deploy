@@ -57,16 +57,12 @@ function transformTasksToEvents(tasks: Task[]) {
 }
 
 interface CalendarTabProps {
-  tasks: {
-    todo: Task[];
-    inProgress: Task[];
-    done: Task[];
-  };
+  tasks: Task[];
 }
 
 export function CalendarTab({ tasks }: CalendarTabProps) {
   // Combine all tasks from different columns
-  const allTasks = [...tasks.todo, ...tasks.inProgress, ...tasks.done];
+  const allTasks = tasks;
   const taskEvents = transformTasksToEvents(allTasks);
   const allEvents = [...mockEvents, ...taskEvents];
 
