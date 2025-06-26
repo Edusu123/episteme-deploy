@@ -7,6 +7,7 @@ import { DocumentsTab } from './components/documents-tab';
 import { useResearchEnvironment } from 'hooks/useResearchEnvironment';
 import { use, useState } from 'react';
 import { IFileList } from 'types/file';
+import { ResearchMembersTab } from './components/research-members-tab';
 
 export default function ResearchEnvironment({
   params
@@ -71,14 +72,7 @@ export default function ResearchEnvironment({
         </TabsContent>
 
         <TabsContent value="people">
-          <Card>
-            <CardHeader>
-              <CardTitle>Pessoas</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Conteúdo da seção de Pessoas</p>
-            </CardContent>
-          </Card>
+          <ResearchMembersTab researchId={id} />
         </TabsContent>
       </Tabs>
     </div>

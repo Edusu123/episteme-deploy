@@ -114,3 +114,27 @@ export const getResearchEnvironment = async ({
 
   return response;
 };
+
+export const getResearchMembers = async ({
+  researchId
+}: {
+  researchId: string;
+}) => {
+  const response = await api.get(`/researches/${researchId}/users`);
+
+  return response;
+};
+
+export const inviteMembersToResearch = async ({
+  researchId,
+  emails
+}: {
+  researchId: string;
+  emails: string[];
+}) => {
+  const response = await api.post(`/researches/${researchId}/invite-users`, {
+    emailsToInvite: emails
+  });
+
+  return response;
+};

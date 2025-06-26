@@ -122,10 +122,10 @@ export function DocumentsTab({ researchId }: IProps) {
                       size="sm"
                       onClick={() => window.open(doc.url, '_blank')}
                     >
-                      <FolderOpenDot className="h-4 w-4" />
+                      <FolderOpenDot className="h-5 w-5" />
                     </Button>
                     <Button variant="ghost" size="sm">
-                      <Trash className="h-4 w-4 text-red-700" />
+                      <Trash className="h-5 w-5 text-red-700 dark:text-red-200" />
                     </Button>
                   </TableCell>
                 </TableRow>

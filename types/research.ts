@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { IUser, IUserInfo } from './user';
 
 export interface IResearch {
@@ -58,3 +59,11 @@ export interface ResearchEnvironment {
     filePurpose: string;
   }[];
 }
+
+export const inviteMemberSchema = z.object({
+  emails: z
+    .array(z.string().email('Email inválido'))
+    .min(1, 'Adicione pelo menos um email')
+});
+
+export type InviteMemberFormData = z.infer<typeof inviteMemberSchema>;
