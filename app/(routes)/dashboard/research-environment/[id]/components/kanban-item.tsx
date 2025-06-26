@@ -102,13 +102,15 @@ export function KanbanItem({
       </div>
       <p className="text-sm text-muted-foreground mt-1">{task.description}</p>
       <div className="flex items-center justify-between mt-4">
-        <img
-          src={task.assignedToProfileImageUrl}
-          alt={task.assignedToName}
-          width={20}
-          height={20}
-          className="rounded-full"
-        />
+        {task.assignedToProfileImageUrl && task.assignedToName && (
+          <img
+            src={task.assignedToProfileImageUrl}
+            alt={task.assignedToName}
+            width={20}
+            height={20}
+            className="rounded-full"
+          />
+        )}
         <span className="text-sm text-muted-foreground ml-2">
           {task.assignedToName}
         </span>
