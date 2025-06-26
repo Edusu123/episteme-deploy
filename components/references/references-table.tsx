@@ -86,7 +86,7 @@ export function ReferencesTable({
                       Nenhum dado encontrado
                     </div>
                     <div className="text-sm">
-                      Não há pessoas para exibir no momento.
+                      Não há referências para exibir no momento.
                     </div>
                   </div>
                 </td>

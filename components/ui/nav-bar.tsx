@@ -45,10 +45,6 @@ export default function DesktopNav() {
           <Home className="h-6 w-6" />
         </NavItem>
 
-        <NavItem href="/documents" label="Documentos e Arquivos">
-          <BookText className="h-5 w-5" />
-        </NavItem>
-
         <NavItem href="/people" label="Pessoas">
           <Users2 className="h-5 w-5" />
         </NavItem>

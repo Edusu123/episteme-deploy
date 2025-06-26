@@ -5,7 +5,8 @@ import { Tabs, TabsTrigger, TabsList, TabsContent } from '@/components/ui/tabs';
 import { KanbanBoard } from './components/kanban-board';
 import { DocumentsTab } from './components/documents-tab';
 import { useResearchEnvironment } from 'hooks/useResearchEnvironment';
-import { use } from 'react';
+import { use, useState } from 'react';
+import { IFileList } from 'types/file';
 
 export default function ResearchEnvironment({
   params
@@ -18,7 +19,6 @@ export default function ResearchEnvironment({
     isLoading,
     error
   } = useResearchEnvironment({ researchId: id });
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -46,9 +46,7 @@ export default function ResearchEnvironment({
       <Tabs defaultValue="documents">
         <div className="flex items-center justify-between mt-2">
           <TabsList>
-            <TabsTrigger value="documents">
-              Documentos e bibliografias
-            </TabsTrigger>
+            <TabsTrigger value="documents">Documentos</TabsTrigger>
             <TabsTrigger value="kanban">Tarefas</TabsTrigger>
             <TabsTrigger value="calendar">Cronograma</TabsTrigger>
             <TabsTrigger value="people">Pessoas</TabsTrigger>
@@ -56,7 +54,7 @@ export default function ResearchEnvironment({
         </div>
 
         <TabsContent value="documents">
-          <DocumentsTab />
+          <DocumentsTab researchId={id} />
         </TabsContent>
 
         <TabsContent value="kanban">
