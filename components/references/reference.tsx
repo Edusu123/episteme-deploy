@@ -1,25 +1,23 @@
-import { IAuthor, IReference } from 'types/reference';
+import { IAuthor, IReference, IReferenceList } from 'types/reference';
 import { TableCell, TableRow } from '../ui/table';
 import { ActionButton } from '../ui/custom/action-button';
 
 interface IProps {
-  reference: IReference;
+  reference: IReferenceList;
   deleteAction: (id: string) => void;
 }
 
 export function Reference({ reference, deleteAction }: IProps) {
   return (
     <TableRow>
-      <TableCell className="font-medium">{reference.title}</TableCell>
-      <TableCell>
-        {reference.authors.length > 1
-          ? reference.authors.map((a: IAuthor) => a.firstName).join(', ')
-          : reference.authors[0].firstName +
-            ' ' +
-            reference.authors[0].lastName}
+      <TableCell className="font-medium">
+        <div
+          dangerouslySetInnerHTML={{ __html: reference.formattedReference }}
+        ></div>
       </TableCell>
+      <TableCell>{reference.formattedReferenceInText}</TableCell>
       <TableCell className="hidden md:table-cell">
-        {reference.createdOn.toLocaleDateString('pt-br')}
+        {reference.createdAt.toLocaleDateString('pt-br')}
       </TableCell>
       <TableCell>
         <ActionButton

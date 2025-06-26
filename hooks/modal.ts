@@ -17,3 +17,8 @@ export const useProfileModal = create<ProfileModalStore>((set) => ({
   setModal: (open: boolean, imageURL: string) =>
     set(() => ({ isOpen: open, imageURL: imageURL }))
 }));
+
+export const useReferenceRegisterModal = create<ModalStore>((set) => ({
+  isOpen: false,
+  setModal: (open: boolean) => set(() => ({ isOpen: open }))
+}));

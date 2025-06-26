@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { IReference } from 'types/reference';
+import { IReference, IReferenceList } from 'types/reference';
 import { Reference } from './reference';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
@@ -24,7 +24,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 const referencesPerPage = 5;
 
 interface IProps {
-  references: IReference[];
+  references: IReferenceList[];
   offset: number;
   totalReferences: number;
   deleteAction: (id: string) => void;
@@ -75,9 +75,31 @@ export function ReferencesTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {references.map((r: IReference) => (
-              <Reference deleteAction={deleteAction} key={r.id} reference={r} />
-            ))}
+            {references.length === 0 ? (
+              <TableRow>
+                <td
+                  colSpan={7}
+                  className="text-center py-8 text-muted-foreground"
+                >
+                  <div className="flex flex-col items-center space-y-2">
+                    <div className="text-lg font-medium">
+                      Nenhum dado encontrado
+                    </div>
+                    <div className="text-sm">
+                      Não há pessoas para exibir no momento.
+                    </div>
+                  </div>
+                </td>
+              </TableRow>
+            ) : (
+              references.map((r: IReferenceList) => (
+                <Reference
+                  deleteAction={deleteAction}
+                  key={r.id}
+                  reference={r}
+                />
+              ))
+            )}
           </TableBody>
         </Table>
       </CardContent>

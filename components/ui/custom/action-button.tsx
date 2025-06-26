@@ -37,10 +37,9 @@ export function ActionButton({ itemId, accessLink, deleteAction }: IProps) {
             <SquareArrowOutUpRight size={15} />
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>Editar</DropdownMenuItem>
         <DropdownMenuItem>
           <button onClick={() => deleteAction(itemId)} type="submit">
-            Arquivar
+            Excluir
           </button>
         </DropdownMenuItem>
       </DropdownMenuContent>
