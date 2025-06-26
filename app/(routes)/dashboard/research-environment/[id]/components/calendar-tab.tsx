@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,7 @@ const mockEvents = [
     end: '2024-03-25T11:00:00',
     color: '#4f46e5',
     type: 'event',
-    description: 'Reunião semanal de alinhamento da equipe',
+    description: 'Reunião semanal de alinhamento da equipe'
   },
   {
     id: 'event-2',
@@ -29,7 +29,7 @@ const mockEvents = [
     end: '2024-03-26T15:30:00',
     color: '#059669',
     type: 'event',
-    description: 'Apresentação dos resultados preliminares da pesquisa',
+    description: 'Apresentação dos resultados preliminares da pesquisa'
   },
   {
     id: 'event-3',
@@ -38,21 +38,21 @@ const mockEvents = [
     end: '2024-03-27T12:00:00',
     color: '#dc2626',
     type: 'event',
-    description: 'Workshop sobre metodologias de pesquisa',
-  },
+    description: 'Workshop sobre metodologias de pesquisa'
+  }
 ];
 
 // Transform tasks into calendar events
 function transformTasksToEvents(tasks: Task[]) {
   return tasks.map((task) => ({
-    id: `task-${task.id}`,
+    id: `task-${task.taskId}`,
     title: task.title,
     start: task.dueDate,
     allDay: true,
     color: '#f59e0b', // Amber color for tasks
     type: 'task',
     description: task.description,
-    assignee: task.assignee,
+    assignee: task.assignedTo
   }));
 }
 
@@ -89,7 +89,7 @@ export function CalendarTab({ tasks }: CalendarTabProps) {
             headerToolbar={{
               left: 'prev,next today',
               center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay'
             }}
             locale={ptBrLocale}
             events={allEvents}
@@ -103,20 +103,20 @@ export function CalendarTab({ tasks }: CalendarTabProps) {
             eventClick={(info: EventClickArg) => {
               const event = info.event;
               const eventData = event.extendedProps;
-              
+
               if (eventData.type === 'task') {
                 console.log('Task clicked:', {
                   title: event.title,
                   description: eventData.description,
                   assignee: eventData.assignee,
-                  dueDate: event.start,
+                  dueDate: event.start
                 });
               } else {
                 console.log('Event clicked:', {
                   title: event.title,
                   description: eventData.description,
                   start: event.start,
-                  end: event.end,
+                  end: event.end
                 });
               }
             }}
@@ -127,7 +127,7 @@ export function CalendarTab({ tasks }: CalendarTabProps) {
             eventContent={(eventInfo) => {
               const event = eventInfo.event;
               const eventData = event.extendedProps;
-              
+
               return (
                 <div className="flex items-center gap-1">
                   {eventData.type === 'task' && (
@@ -142,4 +142,4 @@ export function CalendarTab({ tasks }: CalendarTabProps) {
       </CardContent>
     </Card>
   );
-} 
+}
