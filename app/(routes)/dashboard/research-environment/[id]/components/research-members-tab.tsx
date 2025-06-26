@@ -22,13 +22,14 @@ import { toast } from 'sonner';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useState } from 'react';
 import InviteMemberModal from 'components/modal/invite-member';
-import { InviteMemberFormData } from 'types/research';
+import { InviteMemberFormData, ResearchEnvironment } from 'types/research';
 
 interface IProps {
   researchId: string;
+  researchData: ResearchEnvironment;
 }
 
-export function ResearchMembersTab({ researchId }: IProps) {
+export function ResearchMembersTab({ researchId, researchData }: IProps) {
   const currentUser = useCurrentUser();
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
@@ -123,7 +124,10 @@ export function ResearchMembersTab({ researchId }: IProps) {
                             userId: user.userId
                           });
                         }}
-                        disabled={currentUser?.data.userId === user.userId}
+                        disabled={
+                          currentUser?.data.userId !== researchData.ownerId ||
+                          researchData.ownerId === user.userId
+                        }
                       >
                         <Trash className="h-5 w-5 text-red-700 dark:text-red-200" />
                       </Button>

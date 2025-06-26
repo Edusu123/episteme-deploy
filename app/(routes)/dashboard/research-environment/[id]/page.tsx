@@ -72,7 +72,7 @@ export default function ResearchEnvironment({
         </TabsContent>
 
         <TabsContent value="people">
-          <ResearchMembersTab researchId={id} />
+          <ResearchMembersTab researchId={id} researchData={researchEnvironment?.data?.research} />
         </TabsContent>
       </Tabs>
     </div>

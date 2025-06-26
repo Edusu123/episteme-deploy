@@ -1,67 +1,21 @@
 'use client';
 
-import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  MouseSensor,
-  TouchSensor,
-  useSensor,
-  useSensors
-} from '@dnd-kit/core';
-import { KanbanColumn } from '../dashboard/research-environment/[id]/components/kanban-column';
-import { KanbanItem } from '../dashboard/research-environment/[id]/components/kanban-item';
-import { useEffect, useMemo, useState } from 'react';
-import { arrayMove } from '@dnd-kit/sortable';
-import { researchEnvironments } from 'app/api/seed/mocks';
+import { useEffect, useState } from 'react';
 import UsersList from '@/components/ui/custom/users-list';
 import { getSelfTasks } from 'services/user';
 import { useQuery } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TasksTable } from '@/components/tasks/tasks-table';
 import { ITasks } from 'types/task';
-
-const mockTasks = {
-  todo: [
-    {
-      id: 1,
-      title: 'Revisar metodologia',
-      description: 'Revisar e validar a metodologia da pesquisa',
-      assignee: 'João Silva',
-      dueDate: '2025-05-23'
-    },
-    {
-      id: 2,
-      title: 'Coletar dados',
-      description: 'Iniciar coleta de dados para análise',
-      assignee: 'Maria Santos',
-      dueDate: '2025-05-24'
-    }
-  ],
-  inProgress: [
-    {
-      id: 3,
-      title: 'Análise preliminar',
-      description: 'Realizar análise preliminar dos dados coletados',
-      assignee: 'Pedro Oliveira',
-      dueDate: '2025-05-25'
-    }
-  ],
-  done: [
-    {
-      id: 4,
-      title: 'Definir objetivos',
-      description: 'Definir objetivos e metas da pesquisa',
-      assignee: 'João Silva',
-      dueDate: '2025-05-26'
-    }
-  ]
-};
+import { useSearchParams } from 'next/navigation';
 
 //TODO: Get tasks from API
 //TODO: Add task editing
 export default function page() {
+  const searchParams = useSearchParams();
+  const offset = parseInt(searchParams.get('offset') || '0');
+  const perPage = 5;
+
   const {
     data: userTasks,
     error,
@@ -98,29 +52,22 @@ export default function page() {
     }
   }, [userTasks]);
 
+  // Apply pagination to tasks
+  const paginatedTasks = formattedTasks.slice(offset, offset + perPage);
+
   return (
     <Tabs defaultValue="all">
       <div className="flex items-center mt-2">
         <TabsList>
           <TabsTrigger value="all">Todos</TabsTrigger>
-          <TabsTrigger value="active">Ativos</TabsTrigger>
-          <TabsTrigger value="archived" className="hidden sm:flex">
-            Arquivados
-          </TabsTrigger>
         </TabsList>
-        <div className="ml-auto flex items-center gap-2">
-          {/* <Button size="sm" variant="outline" className="h-8 gap-1">
-            <File className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
-          </Button> */}
-        </div>
       </div>
       <TabsContent value="all">
         <TasksTable
-          tasks={formattedTasks}
-          offset={0}
+          tasks={paginatedTasks}
+          offset={offset}
           total={formattedTasks?.length}
-          perPage={10}
+          perPage={perPage}
           refetch={refetch}
         />
 

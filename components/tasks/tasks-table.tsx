@@ -34,19 +34,20 @@ export function TasksTable({ tasks, offset, total, perPage, refetch }: IProps) {
   let router = useRouter();
 
   function prevPage() {
-    const previousOffset =
-      offset - perPage < perPage ? perPage : offset - perPage;
-
+    const previousOffset = Math.max(0, offset - perPage);
     router.push(`/tasks?offset=${previousOffset}`, {
       scroll: false
     });
   }
 
   function nextPage() {
-    const newOffset = offset + perPage > total ? total : offset + perPage;
-
+    const newOffset = Math.min(total, offset + perPage);
     router.push(`/tasks?offset=${newOffset}`, { scroll: false });
   }
+
+  // Calculate the correct display range
+  const startItem = offset + 1;
+  const endItem = Math.min(offset + tasks.length, total);
 
   return (
     <Card>
@@ -80,11 +81,10 @@ export function TasksTable({ tasks, offset, total, perPage, refetch }: IProps) {
           <div className="text-xs text-muted-foreground">
             Exibindo{' '}
             <strong>
-              {Math.max(0, Math.min(offset - perPage, total) + 1)}-
-              {Math.min(offset, total)}
+              {startItem}-{endItem}
             </strong>{' '}
             de
-            <strong>{' ' + total}</strong> documentos
+            <strong>{' ' + total}</strong> atividades
           </div>
         </div>
         <div className="flex">
@@ -93,7 +93,7 @@ export function TasksTable({ tasks, offset, total, perPage, refetch }: IProps) {
             variant="ghost"
             size="sm"
             type="submit"
-            disabled={offset === perPage}
+            disabled={offset === 0}
           >
             <ChevronLeft className="mr-2 h-4 w-4" />
             Anterior
@@ -103,7 +103,7 @@ export function TasksTable({ tasks, offset, total, perPage, refetch }: IProps) {
             variant="ghost"
             size="sm"
             type="submit"
-            disabled={offset >= total}
+            disabled={offset + perPage >= total}
           >
             Próxima
             <ChevronRight className="ml-2 h-4 w-4" />
