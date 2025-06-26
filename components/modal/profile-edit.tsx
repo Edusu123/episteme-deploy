@@ -29,6 +29,9 @@ import { toast } from 'sonner';
 import { CgSpinner } from 'react-icons/cg';
 import { useProfileModal } from 'hooks/modal';
 import api from 'services/base/api';
+import { useOAuthStatePolling } from 'hooks/useOAuthStatePooling';
+import { completeGoogleOAuth, exchangeGoogleCode, getGoogleOAuthUrl } from 'services/integrations';
+import { AxiosError } from 'axios';
 
 interface IProps {
   id: string;
@@ -46,7 +49,6 @@ export default function ProfileEdit({
   readOnly = false
 }: IProps) {
   const settingsModal = useProfileModal();
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [lattesXMLFile, setLattesXMLFile] = useState<File | undefined>();
   const [picUrl, setPicUrl] = useState<string | undefined>();
@@ -68,6 +70,67 @@ export default function ProfileEdit({
     ]
   });
   const [profileImage, setProfileImage] = useState<File | undefined>();
+
+  // OAuth state
+  const [oauthState, setOauthState] = useState<string | null>(null);
+  const [oauthError, setOauthError] = useState<{
+    message: string;
+    status: number | null;
+  } | null>(null);
+
+  const { loading, openOAuthWindow, polling, statusMessage } =
+    useOAuthStatePolling({
+      sessionKey: oauthState || '',
+      onCodeReceived: async (code: string) => {
+        // Handle the OAuth code here
+        console.log('OAuth code received:', code);
+
+        try {
+          // Complete the OAuth process by calling the backend
+          await exchangeGoogleCode({ code, state: oauthState || '' });
+
+
+          toast.success('Conta Google conectada com sucesso!');
+        } catch (error) {
+          console.error('Failed to complete OAuth:', error);
+          setOauthError({
+            message: 'Failed to complete OAuth process',
+            status:
+              error instanceof AxiosError
+                ? (error.response?.status ?? 500)
+                : null
+          });
+        }
+      },
+      setError: (error) => {
+        setOauthError(error);
+      },
+      statusMessages: {
+        success: 'Google account connected successfully!',
+        timeout: 'Connection timed out. Please try again.'
+      }
+    });
+
+  const handleConnectGoogle = async () => {
+    try {
+      // Get OAuth URL from your API
+      const response = await getGoogleOAuthUrl();
+
+      const { authUrl, state } = response;
+      setOauthState(state);
+
+      // Open OAuth window and start polling
+      await openOAuthWindow(authUrl);
+    } catch (error) {
+      const errorMessage = 'Falha ao iniciar processo OAuth';
+      setOauthError({
+        message: errorMessage,
+        status:
+          error instanceof AxiosError ? (error.response?.status ?? 500) : null
+      });
+      toast.error(errorMessage);
+    }
+  };
 
   const addFormation = () => {
     setProfileInfo((prev: IUser) => ({
@@ -261,6 +324,47 @@ export default function ProfileEdit({
               }}
               label="Lattes XML"
             />
+          )}
+
+          <div className="flex flex-row justify-center p-2 mt-4">
+            <Button
+              variant="outline"
+              onClick={handleConnectGoogle}
+              disabled={loading || polling}
+              className="font-semibold text-base w-64 bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 shadow-sm"
+            >
+              {loading || polling ? (
+                <CgSpinner size={20} className="animate-spin mr-2" />
+              ) : (
+                <Image
+                  src="/google-icon.svg"
+                  className="mr-2"
+                  alt="Google"
+                  width={24}
+                  height={24}
+                />
+              )}
+              {loading || polling ? 'Conectando...' : 'Conectar com Google'}
+            </Button>
+          </div>
+
+          {/* Status messages */}
+          {polling && (
+            <div className="flex flex-row justify-center p-2">
+              <p className="text-sm text-blue-600">Conectando ao Google...</p>
+            </div>
+          )}
+
+          {statusMessage && (
+            <div className="flex flex-row justify-center p-2">
+              <p className="text-sm text-green-600">{statusMessage}</p>
+            </div>
+          )}
+
+          {oauthError && (
+            <div className="flex flex-row justify-center p-2">
+              <p className="text-sm text-red-600">Erro: {oauthError.message}</p>
+            </div>
           )}
         </div>
 
