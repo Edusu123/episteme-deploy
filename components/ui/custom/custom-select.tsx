@@ -52,7 +52,7 @@ const CustomSelect = forwardRef<HTMLSelectElement, InputProps>(
               {showImages && value && (
                 <img
                   alt=""
-                  src={value?.imageUrl ?? ''}
+                  src={value?.imageUrl ?? 'https://placehold.co/400'}
                   className="size-5 shrink-0 rounded-full"
                 />
               )}

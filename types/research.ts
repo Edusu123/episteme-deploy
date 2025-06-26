@@ -21,3 +21,40 @@ export interface IResearchList {
   usersList: IUserInfo[];
   createdAt: Date;
 }
+
+export interface ResearchEnvironment {
+  researchId: string;
+  title: string;
+  description: string;
+  ownerId: string;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  imageId: string | null;
+  deletedAt: Date | null;
+  fileId: string | null;
+  fileName: string | null;
+  fileType: string | null;
+  fileUrl: string | null;
+  filePath: string | null;
+  deletedBy: string | null;
+  filePurpose: string | null;
+  uploadedBy: string | null;
+  users: {
+    userId: string;
+    researchId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+    name: string;
+    email: string;
+    isRoot: boolean;
+    isActive: boolean;
+    activationToken: string;
+    profileImageId: string;
+    fileId: string;
+    fileName: string;
+    fileType: string;
+    fileUrl: string;
+    filePurpose: string;
+  }[];
+}

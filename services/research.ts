@@ -73,8 +73,6 @@ export const deleteResearchPerson = async ({
   return response;
 };
 
-
-
 export const researchPutTaskBody = z.object({
   taskId: z.string().uuid().optional(),
   title: z.string(),
@@ -93,6 +91,26 @@ export const updateResearchTask = async ({
   researchId: string;
 }) => {
   const response = await api.put(`/researches/${researchId}/tasks`, task);
+
+  return response;
+};
+
+export const getResearchDefaultKanban = async ({
+  researchId
+}: {
+  researchId: string;
+}) => {
+  const response = await api.get(`/researches/${researchId}/kanban`);
+
+  return response;
+};
+
+export const getResearchEnvironment = async ({
+  researchId
+}: {
+  researchId: string;
+}) => {
+  const response = await api.get(`/researches/${researchId}`);
 
   return response;
 };
