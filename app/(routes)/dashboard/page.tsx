@@ -1,25 +1,20 @@
 'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlusCircle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import RedirectButton from '@/components/ui/custom/redirect-button';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { getResearches } from 'services/research';
-import { IResearch, IResearchList } from 'types/research';
+import { IResearchList } from 'types/research';
 import { AxiosResponse } from 'axios';
-import { useSession } from 'next-auth/react';
 import { ResearchesTable } from '@/components/researches/researches-table';
-import { researchEnvironments } from 'app/api/seed/mocks';
-import api from 'services/base/api';
 import { IUserInfo } from 'types/user';
 
 const researchesPerPage = 5;
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
-  const session = useSession();
 
   const offset = Number(searchParams.get('offset') ?? researchesPerPage);
 
@@ -55,10 +50,8 @@ export default function ProductsPage() {
   };
 
   useEffect(() => {
-    if (api.defaults.headers.Authorization) getAllResearches();
-  }, [session]);
+    getAllResearches();
 
-  useEffect(() => {
     if (searchParams.get('showResearchCreationSuccess'))
       toast.success('Novo ambiente criado com sucesso!');
 

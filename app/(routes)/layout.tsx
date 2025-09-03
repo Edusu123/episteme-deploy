@@ -4,26 +4,13 @@ import Link from 'next/link';
 import {
   Bell,
   BookCopy,
-  BookText,
   Calendar,
   CheckCheck,
   Home,
-  LineChart,
-  Package,
-  Package2,
   PanelLeft,
-  PiggyBank,
-  ShoppingCart,
   Users2
 } from 'lucide-react';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
+import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -50,6 +37,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       api.defaults.headers.Authorization = `Bearer ${session.data?.user.accessToken}`;
     }
   }, [session]);
+
+  if (session?.status !== 'authenticated' || !api.defaults.headers?.Authorization)
+    return <div></div>;
 
   return (
     <main className="flex min-h-screen w-full flex-col bg-muted/40">
