@@ -7,6 +7,10 @@ export default {
       {
         protocol: 'https',
         hostname: '**'
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost'
       }
     ],
     minimumCacheTTL: 1
