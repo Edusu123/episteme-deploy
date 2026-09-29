@@ -19,6 +19,15 @@ export const getFilesByResearch = async (researchId: string) => {
   return res;
 };
 
+export const downloadResearchFile = async (
+  researchId: string,
+  fileId: string
+) => {
+  return api.get(`/researches/${researchId}/files/${fileId}/download`, {
+    responseType: 'blob'
+  });
+};
+
 export const uploadFile = async (researchId: string, file: File) => {
   var bodyFormData = new FormData();
 

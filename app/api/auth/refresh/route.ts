@@ -1,4 +1,4 @@
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   // change it with your own endpoint
   const res = await fetch(`${process.env.API_BASE_URL}/refresh-token`, {
     method: 'POST',
-    headers: await headers(),
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   });
 

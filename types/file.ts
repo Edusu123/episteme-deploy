@@ -3,5 +3,4 @@ export interface IFileList {
   name: string;
   userName: string;
   createdAt: Date;
-  url: string;
 }

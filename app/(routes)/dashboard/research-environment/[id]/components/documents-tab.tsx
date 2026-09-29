@@ -13,7 +13,11 @@ import {
 import { Download, FolderOpenDot, Trash, Upload } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { getFilesByResearch, uploadFile } from 'services/file';
+import {
+  downloadResearchFile,
+  getFilesByResearch,
+  uploadFile
+} from 'services/file';
 import { AxiosResponse } from 'axios';
 import api from 'services/base/api';
 import { IFileList } from 'types/file';
@@ -37,7 +41,6 @@ export function DocumentsTab({ researchId }: IProps) {
             createdAt: new Date(item.createdAt),
             id: item.fileId,
             name: item.fileName,
-            url: item.fileUrl,
             userName: item.user.name
           })
         )
@@ -57,6 +60,16 @@ export function DocumentsTab({ researchId }: IProps) {
         getAllFiles();
       });
   }, [file]);
+
+  const downloadFile = async (file: IFileList) => {
+    const response = await downloadResearchFile(researchId, file.id);
+    const url = URL.createObjectURL(response.data);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = file.name;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <Card>
@@ -120,7 +133,7 @@ export function DocumentsTab({ researchId }: IProps) {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => window.open(doc.url, '_blank')}
+                      onClick={() => downloadFile(doc)}
                     >
                       <FolderOpenDot className="h-5 w-5" />
                     </Button>

@@ -77,7 +77,7 @@ export const config = {
           // for the session cookie (4096 bytes)
           const cookieStore = await cookies();
           cookieStore.set({
-            name: `${prefix}xxx.refresh-token`,
+            name: `${prefix}dbp.refresh-token`,
             value: jsonResult.refreshToken,
             httpOnly: true,
             sameSite: 'strict',
